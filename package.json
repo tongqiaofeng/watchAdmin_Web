@@ -1,0 +1,39 @@
+{
+  "name": "vue3-admin",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "serve": "vite --host 192.168.0.120",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@vue/shared": "^3.2.37",
+    "echarts": "^5.4.0",
+    "vue": "^3.2.37",
+    "vue-echarts": "^6.2.3",
+    "vue3-google-map": "^0.15.0",
+    "vuedraggable": "^4.1.0"
+  },
+  "devDependencies": {
+    "@element-plus/icons-vue": "^2.0.6",
+    "@icon-park/vue-next": "^1.4.2",
+    "@types/node": "^18.0.6",
+    "@vitejs/plugin-vue": "^3.0.0",
+    "axios": "^0.27.2",
+    "element-plus": "^2.2.9",
+    "lodash": "^4.17.21",
+    "node-sass": "^7.0.1",
+    "nprogress": "^0.2.0",
+    "pinia": "^2.0.16",
+    "sass": "^1.53.0",
+    "sass-loader": "^13.0.2",
+    "screenfull": "^6.0.2",
+    "style-loader": "^3.3.1",
+    "unplugin-auto-import": "^0.9.3",
+    "unplugin-vue-components": "^0.21.1",
+    "vite": "^3.0.0",
+    "vue-router": "^4.1.2"
+  }
+}

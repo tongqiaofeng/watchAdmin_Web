@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TopTime在线办公系统</title>
+  <!-- <link rel="icon" href="./public/favicon.ico"> -->
+  <style>
+    html,
+    body,
+    #app,
+    .el-container {
+      height: 100%;
+    }
+
+    .el-message {
+      top: 150px !important;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app"></div>
+
+  <script>
+    let userAgent = navigator.userAgent; // 取得浏览器的userAgent字符串
+    let isChrome = navigator.userAgent.indexOf('Chrome') > -1; // 是否是谷歌 
+    if (isChrome) {
+      if (window.devicePixelRatio > 1) {
+        let s = Number(1 / window.devicePixelRatio);
+        document.body.style.zoom = s;
+      } else {
+        document.body.style.zoom = 1;
+      };
+    }
+  </script>
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>

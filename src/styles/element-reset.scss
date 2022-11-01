@@ -1,0 +1,194 @@
+$main-color: #0c7063;
+
+table {
+  table-layout: fixed;
+}
+
+td {
+  word-break: break-all;
+  word-wrap: break-word;
+}
+
+.font-warp {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:deep(.el-dialog__footer) {
+  text-align: right;
+}
+
+:deep(.el-dialog){
+  margin-top: 100px;
+}
+
+:deep(.el-button) {
+  font-size: 14px;
+}
+
+:deep(.el-button--primary) {
+  color: #fff !important;
+  background-color: #0c7063 !important;
+  border-color: #0c7063 !important;
+}
+
+:deep(.el-button.is-text) {
+  color: #0c7063;
+  background-color: transparent;
+}
+
+.input-width {
+  width: 600px !important;
+}
+
+:deep(.el-form-item::after,
+  .el-form-item::before) {
+  display: none;
+  content: "";
+}
+
+:deep(.el-form-item__content::after,
+  .el-form-item__content::before) {
+  display: none;
+  content: "";
+}
+
+:deep(.el-pagination) {
+  font-weight: 700;
+}
+
+:deep(.el-form-item .el-form-item) {
+  margin-bottom: 20px;
+}
+
+div .el-pager li {
+  background-color: transparent !important;
+}
+
+:deep(.el-pagination button:disabled) {
+  background-color: transparent;
+}
+
+:deep(.el-pagination .btn-next) {
+  background-color: transparent;
+}
+
+:deep(.el-pagination .btn-prev) {
+  background-color: transparent;
+}
+
+:deep(.el-checkbox__input.is-checked+.el-checkbox__label) {
+  color: $main-color;
+}
+
+:deep(.el-input-number .el-input__inner) {
+  text-align: left;
+}
+
+:deep(.el-checkbox__input.is-checked .el-checkbox__inner) {
+  background-color: $main-color;
+  border-color: $main-color;
+}
+
+:deep(.el-select-dropdown__item) {
+  padding-left: 20px !important;
+}
+
+:deep(.el-upload--picture-card) {
+  width: 100px;
+  height: 100px;
+}
+
+:deep(.el-upload-list--picture-card .el-upload-list__item) {
+  width: 100px;
+  height: 100px;
+}
+
+// 表格操作行
+.btn-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .btn {
+    margin-right: 20px;
+    color: $main-color;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  :deep(.el-icon) {
+    margin-left: 1px;
+  }
+}
+
+// radio
+:deep(.el-radio) {
+  margin-right: 20px;
+}
+
+:deep(.el-radio.el-radio--small .el-radio__label) {
+  color: $main-color;
+}
+
+:deep(.el-radio__input.is-checked+.el-radio__label) {
+  color: $main-color;
+}
+
+:deep(.el-radio__input.is-checked .el-radio__inner) {
+  border-color: $main-color;
+  background: $main-color;
+}
+
+:deep(.el-checkbox) {
+  margin-right: 30px;
+}
+
+:deep(.el-checkbox.el-checkbox--small) {
+  margin-right: 30px;
+}
+
+:deep(.el-slider__bar) {
+  background-color: $main-color;
+}
+
+:deep(.el-slider__button) {
+  border: solid 2px $main-color;
+}
+
+// el-tabs
+:deep(.el-tabs__item) {
+  font-size: 15px;
+}
+
+:deep(.el-tabs__item.is-active) {
+  color: $main-color;
+}
+
+:deep(.el-tabs__active-bar) {
+  background-color: $main-color;
+}
+
+.el-tabs__item:hover {
+  color: $main-color !important;
+}
+
+:deep(.el-input__suffix) {
+  justify-content: flex-end;
+}
+
+// el-upload
+
+:deep(.el-upload--picture-card) {
+  width: 120px;
+  height: 120px;
+}
+
+:deep(.el-icon--close-tip) {
+  display: none;
+}
+
+:deep(.el-upload-list__item.is-success .el-upload-list__item-status-label) {
+  display: none;
+}

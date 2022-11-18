@@ -162,7 +162,7 @@
 
             <el-table-column prop="stockInTime" align="center" label="入库日期">
               <template v-slot="scope">
-                <span v-if="scope.row.stockInTime">{{
+                <span v-if="scope.row.state > 1">{{
                   scope.row.stockInTime
                 }}</span>
                 <span v-else>暂无</span>
@@ -175,7 +175,7 @@
               label="出库日期"
             >
               <template v-slot="scope">
-                <span v-if="scope.row.stockOutTime">{{
+                <span v-if="scope.row.state == 4 || scope.row.state == 5">{{
                   scope.row.stockOutTime
                 }}</span>
                 <span v-else>暂无</span>
@@ -187,7 +187,10 @@
               label="在库时长"
             >
               <template v-slot="scope">
-                <span v-if="scope.row.stockOutTime && scope.row.stockInTime"
+                <span v-if="scope.row.state == 2 || scope.row.state == 3"
+                  >{{ diffDay(scope.row.stockInTime, getDateNow()) }}天</span
+                >
+                <span v-else-if="scope.row.state == 4 || scope.row.state == 5"
                   >{{
                     diffDay(scope.row.stockInTime, scope.row.stockOutTime)
                   }}天</span
@@ -803,7 +806,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, nextTick, watch } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import * as Api from "@/api/api";
 import { base_request_url } from "@/utils/request";
 import { diffDay, getDateNow } from "@/utils/utils";

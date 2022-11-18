@@ -1092,13 +1092,6 @@ const watchStateMsgRules = reactive({
       trigger: "change",
     },
   ],
-  stockInPic: [
-    {
-      required: false,
-      message: "请上传商品图片",
-      trigger: "change",
-    },
-  ],
   receiveCompanyMsg: [
     {
       required: false,
@@ -1516,12 +1509,6 @@ const watchStateChange = () => {
   if (watchStateMsgData.value.state > 1) {
     stockTheme.display = "inline-block";
     watchStateMsgRules.stockInTime[0].required = true;
-
-    if (watchStateMsgData.value.state == 2) {
-      watchStateMsgRules.stockInPic[0].required = true;
-    } else {
-      watchStateMsgRules.stockInPic[0].required = false;
-    }
   } else {
     stockTheme.display = "none";
     watchStateMsgRules.stockInTime[0].required = false;
@@ -1839,15 +1826,17 @@ const goBack = () => {
 }
 </style>
 <style lang="scss">
-#tab-transport {
-  display: v-bind("transportTheme.display");
-}
+#purchaseEnter {
+  #tab-transport {
+    display: v-bind("transportTheme.display");
+  }
 
-#tab-stock {
-  display: v-bind("stockTheme.display");
-}
+  #tab-stock {
+    display: v-bind("stockTheme.display");
+  }
 
-#tab-sale {
-  display: v-bind("saleTheme.display");
+  #tab-sale {
+    display: v-bind("saleTheme.display");
+  }
 }
 </style>

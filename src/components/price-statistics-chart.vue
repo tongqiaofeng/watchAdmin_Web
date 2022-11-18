@@ -20,15 +20,7 @@
           :model="watchPriceForm"
           :rules="watchPriceFormRules"
         >
-          <el-form-item prop="price">
-            <el-input
-              style="width: 230px"
-              clearable
-              size="large"
-              v-model="watchPriceForm.price"
-              placeholder="请输入价格"
-            />
-          </el-form-item>
+          
           <el-form-item prop="country" v-if="priceType == 1">
             <el-select
               style="width: 230px"
@@ -47,7 +39,15 @@
               ></el-option>
             </el-select>
           </el-form-item>
-
+          <el-form-item prop="price">
+            <el-input
+              style="width: 230px"
+              clearable
+              size="large"
+              v-model="watchPriceForm.price"
+              placeholder="请输入价格"
+            />
+          </el-form-item>
           <el-form-item>
             <el-button
               size="large"
@@ -84,17 +84,13 @@
           </div>
         </div>
         <el-table :data="watchHistoryList" border>
-          <el-table-column label="价格" prop="convertPrice" align="center">
-            <template #default="scope">
-              <p>
-                <span>{{ formatNumberRgx(scope.row.convertPrice) }}</span>
-                <span style="margin-left: 4px">{{
-                  scope.row.convertCurrency
-                }}</span>
-              </p>
-            </template>
+          <el-table-column
+            v-if="priceType == 1"
+            align="center"
+            label="价格地区"
+            prop="country"
+          >
           </el-table-column>
-
           <el-table-column label="趋势" align="center">
             <template #default="scope">
               <div>
@@ -108,14 +104,16 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column
-            v-if="priceType == 1"
-            align="center"
-            label="价格地区"
-            prop="country"
-          >
+          <el-table-column label="价格" prop="convertPrice" align="center">
+            <template #default="scope">
+              <p>
+                <span>{{ formatNumberRgx(scope.row.convertPrice) }}</span>
+                <span style="margin-left: 4px">{{
+                  scope.row.convertCurrency
+                }}</span>
+              </p>
+            </template>
           </el-table-column>
-
           <el-table-column
             label="更新时间"
             prop="time"

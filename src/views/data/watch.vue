@@ -20,7 +20,7 @@
                     size="large"
                     style="width: 450px"
                     v-model="filterForm.keyword"
-                    placeholder="可输入手表品牌、系列、型号、昵称简称等搜索"
+                    placeholder="可输入手表品牌、系列、型号、昵称简称、是否特别版等搜索"
                     clearable
                   >
                   </el-input>
@@ -136,9 +136,11 @@
                 size="large"
                 class="input-width"
                 v-model="watchForm.brand"
-                :fetch-suggestions="brandList"
-                placeholder="请选择品牌"
+                :fetch-suggestions="brandListQuery"
+                clearable
+                placeholder="可输入筛选选择品牌"
                 @select="onBrandSelect"
+                @change="handleBrandChange"
               >
               </el-autocomplete>
             </el-form-item>
@@ -147,9 +149,10 @@
                 size="large"
                 class="input-width"
                 v-model="watchForm.series"
-                :fetch-suggestions="brandSeries"
-                placeholder="请选择系列"
-                @select="onBrandSelect"
+                :fetch-suggestions="brandSeriesQuery"
+                :fit-input-width="true"
+                clearable
+                placeholder="可选择/输入系列"
               >
               </el-autocomplete>
             </el-form-item>
@@ -219,10 +222,13 @@
                   ></el-input>
                 </el-form-item>
                 <el-form-item label="是否特别版：">
-                  <el-radio-group v-model="watchForm.special">
-                    <el-radio label="是"></el-radio>
-                    <el-radio label="否"></el-radio>
-                  </el-radio-group>
+                  <el-input
+                    size="large"
+                    placeholder="请输入是否特别版"
+                    v-model="watchForm.special"
+                    class="input-width"
+                  >
+                  </el-input>
                 </el-form-item>
                 <el-form-item label="是否防水：">
                   <el-radio-group v-model="watchForm.waterproofEn">
@@ -699,15 +705,6 @@
                       :model="publicPriceForm"
                       :rules="publicPriceFormRules"
                     >
-                      <el-form-item prop="price">
-                        <el-input
-                          style="width: 230px"
-                          clearable
-                          size="large"
-                          v-model="publicPriceForm.price"
-                          placeholder="请输入公价价格"
-                        />
-                      </el-form-item>
                       <el-form-item prop="country">
                         <el-select
                           style="width: 230px"
@@ -726,7 +723,15 @@
                           ></el-option>
                         </el-select>
                       </el-form-item>
-
+                      <el-form-item prop="price">
+                        <el-input
+                          style="width: 230px"
+                          clearable
+                          size="large"
+                          v-model="publicPriceForm.price"
+                          placeholder="请输入公价价格"
+                        />
+                      </el-form-item>
                       <el-form-item>
                         <el-button
                           size="large"
@@ -739,6 +744,11 @@
                     </el-form>
 
                     <el-table :data="newPublicPriceList" border>
+                      <el-table-column
+                        label="公价地区"
+                        prop="publicPriceArea"
+                        align="center"
+                      />
                       <el-table-column
                         label="公价价格"
                         prop="publicPrice"
@@ -755,11 +765,6 @@
                           </div>
                         </template>
                       </el-table-column>
-                      <el-table-column
-                        label="公价地区"
-                        prop="publicPriceArea"
-                        align="center"
-                      />
                       <el-table-column
                         label="更新时间"
                         prop="time"
@@ -1231,6 +1236,11 @@
     <!-- 查看公价表格弹窗 -->
     <el-dialog :title="'公价信息'" v-model="publicPriceDialog" width="800px">
       <el-table :data="publicPriceTableList" border>
+        <el-table-column
+          label="公价地区"
+          prop="publicPriceArea"
+          align="center"
+        />
         <el-table-column label="公价价格" prop="publicPrice" align="center">
           <template #default="item">
             <div>
@@ -1241,11 +1251,6 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column
-          label="公价地区"
-          prop="publicPriceArea"
-          align="center"
-        />
         <el-table-column label="更新时间" prop="time" align="center" />
         <el-table-column v-if="back != 'detail'" label="操作" align="center">
           <template #default="scope">
@@ -1269,7 +1274,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, computed } from "vue";
+import { ref, reactive, watch, onMounted, computed } from "vue";
 import * as Api from "@/api/api";
 import * as WebApi from "@/api/web";
 import { ElMessage } from "element-plus";
@@ -1341,7 +1346,7 @@ const watchForm = reactive({
   powerTime: "", // 机芯动力储备
   series: "", //系列
   shellMaterial: "", // 表壳材质
-  special: "否", // 是否特别版
+  special: "", // 是否特别版
   startYear: "", //上市年份
   style: "", // 风格
   transparent: "是", // 表壳背透
@@ -1548,7 +1553,6 @@ const clearTextLine = computed(() => {
 const searchWatch = async () => {
   loading.value = true;
   const { data: res } = await Api.watchSearchCheck(filterForm);
-  console.log("手表数据", res);
   loading.value = false;
   if (res.code === 200) {
     watchList.value = res.data.list;
@@ -1570,6 +1574,7 @@ const watchBrandList = async () => {
 
 // 选取的品牌
 const onBrandSelect = (brandObj) => {
+  watchForm.series = "";
   let targetBrand = brandAllData.value.find((item) => {
     return item.name === brandObj.value;
   });
@@ -1578,6 +1583,8 @@ const onBrandSelect = (brandObj) => {
       return { value: item };
     });
     brandSeries.value = newBrandSeries;
+  } else {
+    brandSeries.value = [];
   }
 };
 
@@ -1627,7 +1634,7 @@ const showWatchForm = async (status, id = null, tabValue = "0") => {
 
       setDefaultWatchForm();
       Object.assign(watchForm, data);
-      // console.log('数据', data);
+      console.log("数据", data);
       if (data.publicPriceList && data.publicPriceList.length) {
         newPublicPriceList.value = data.publicPriceList.sort((a, b) => {
           return a.time > b.time ? -1 : 1;
@@ -1685,7 +1692,17 @@ const showWatchForm = async (status, id = null, tabValue = "0") => {
         });
       }
 
-      // console.log("手表图片", watchFormArr.pics);
+      if (data.brand) {
+        let targetBrand = brandAllData.value.find((item) => {
+          return item.name === data.brand;
+        });
+        if (targetBrand && targetBrand.series) {
+          let newBrandSeries = targetBrand.series.map((item) => {
+            return { value: item };
+          });
+          brandSeries.value = newBrandSeries;
+        }
+      }
     }
   }
 };
@@ -1734,11 +1751,6 @@ const goBack = () => {
       .scrollIntoView({ behavior: "smooth" });
     watchFormArr.pics = [];
   }
-  resetObjValues(filterForm);
-
-  filterForm.page = 1;
-  filterForm.pageNum = 10;
-  // console.log(filterForm);
 };
 
 // 提交手表表单
@@ -1877,7 +1889,7 @@ const setDefaultWatchForm = () => {
   watchForm.isTop = 0;
   watchForm.limited = "否";
   watchForm.pics = "";
-  watchForm.special = "否";
+  watchForm.special = "";
   watchForm.transparent = "是";
   watchForm.waterproofEn = "是";
 };
@@ -1896,6 +1908,62 @@ const _getNewPublicPriceList = async (watchId) => {
       newPublicPriceList.value = [];
     }
   }
+};
+
+// 获取品牌系列
+const _getBrandSeries = (brand) => {
+  let targetBrand = brandAllData.value.find((item) => {
+    return item.name === brand;
+  });
+  if (targetBrand && targetBrand.series) {
+    let newBrandSeries = targetBrand.series.map((item) => {
+      return { value: item };
+    });
+    return newBrandSeries;
+  } else {
+    return [];
+  }
+};
+
+const brandSeriesQuery = async (value, callback) => {
+  if (value && value != "null") {
+    let serieslist = _getBrandSeries(watchForm.brand);
+    if (serieslist && serieslist.length) {
+      let newlist = serieslist.filter((item) => {
+        return item.value.indexOf(value) > -1;
+      });
+      callback(newlist);
+    } else {
+      ElMessage.warning("未匹配到手表系列数据");
+      callback([]);
+    }
+  } else {
+    let serieslist = _getBrandSeries(watchForm.brand);
+    callback(serieslist);
+  }
+};
+
+const brandListQuery = async (value, callback) => {
+  let newBrandList = brandAllData.value.map((item) => {
+    return { value: item.name };
+  });
+  if (value && value != "null") {
+    let newlist = newBrandList.filter((item) => {
+      return item.value.indexOf(value) > -1;
+    });
+    if (newlist && newlist.length) {
+      callback(newlist);
+    } else {
+      ElMessage.warning("未匹配到品牌数据");
+      callback([]);
+    }
+  } else {
+    callback(newBrandList || []);
+  }
+};
+
+const handleBrandChange = () => {
+  watchForm.series = "";
 };
 </script>
 

@@ -356,15 +356,7 @@
         :model="publicPriceForm"
         :rules="publicPriceFormRules"
       >
-        <el-form-item prop="price">
-          <el-input
-            style="width: 230px"
-            clearable
-            size="large"
-            v-model="publicPriceForm.price"
-            placeholder="请输入公价价格"
-          />
-        </el-form-item>
+        
         <el-form-item prop="country">
           <el-select
             style="width: 230px"
@@ -383,7 +375,15 @@
             ></el-option>
           </el-select>
         </el-form-item>
-
+        <el-form-item prop="price">
+          <el-input
+            style="width: 230px"
+            clearable
+            size="large"
+            v-model="publicPriceForm.price"
+            placeholder="请输入公价价格"
+          />
+        </el-form-item>
         <el-form-item>
           <el-button
             size="large"
@@ -396,6 +396,11 @@
       </el-form>
 
       <el-table :data="publicPriceTableList" border>
+        <el-table-column
+          label="公价地区"
+          prop="publicPriceArea"
+          align="center"
+        />
         <el-table-column label="公价价格" prop="publicPrice" align="center">
           <template #default="item">
             <div>
@@ -406,11 +411,6 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column
-          label="公价地区"
-          prop="publicPriceArea"
-          align="center"
-        />
         <el-table-column label="更新时间" prop="time" align="center" />
         <el-table-column label="操作" align="center">
           <template #default="scope">

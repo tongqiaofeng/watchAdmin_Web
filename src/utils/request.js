@@ -9,7 +9,7 @@ import {
 } from "element-plus";
 
 const base_request_url = 'http://192.168.0.164:8088/api/watch/stock';
-// const base_request_url = 'http://hk.wistechx.cn/api/watch2/stock'  // 正式
+// const base_request_url = 'https://hk.wistechx.cn/WatchExApi/api/watch/stock' // 正式
 
 const request = axios.create({
   baseURL: base_request_url,

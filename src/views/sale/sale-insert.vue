@@ -235,17 +235,9 @@
                     preview-teleported
                     style="width: 90px; height: 90px; z-index: 9999"
                     :src="
-                      scope.row.pics
-                        ? base_request_url +
-                          '/file/' +
-                          scope.row.pics.split('|')[0]
-                        : ''
+                      scope.row.pics ? base_request_url + scope.row.pics : ''
                     "
-                    :preview-src-list="[
-                      base_request_url +
-                        '/file/' +
-                        scope.row.pics.split('|')[0],
-                    ]"
+                    :preview-src-list="[base_request_url + scope.row.pics]"
                   />
                 </div>
               </template>
@@ -539,7 +531,7 @@ async function getNotSoldList() {
     page: page.value,
     pageNum: 5,
     keyword: searchKey.value,
-    warehouseId: warehouseId.value,
+    warehouseIdList: warehouseId.value,
     stateList: [0, 1, 2],
   });
 

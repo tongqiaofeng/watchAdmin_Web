@@ -236,7 +236,7 @@
                         justify-content: flex-end;
                       "
                     >
-                      <el-button type="primary" @click="addRecord"
+                      <el-button type="primary" @click="addRecord(0)"
                         >添加付款账单</el-button
                       >
                     </div>
@@ -466,7 +466,7 @@
                         justify-content: flex-end;
                       "
                     >
-                      <el-button type="primary" @click="addRecord"
+                      <el-button type="primary" @click="addRecord(7)"
                         >添加退税账单</el-button
                       >
                     </div>
@@ -632,7 +632,7 @@
                         justify-content: flex-end;
                       "
                     >
-                      <el-button type="primary" @click="addRecord"
+                      <el-button type="primary" @click="addRecord(8)"
                         >添加佣金账单</el-button
                       >
                     </div>
@@ -775,7 +775,7 @@
                         justify-content: flex-end;
                       "
                     >
-                      <el-button type="primary" @click="addRecord"
+                      <el-button type="primary" @click="addRecord(9)"
                         >添加小费账单</el-button
                       >
                     </div>
@@ -988,7 +988,7 @@
                     justify-content: flex-end;
                   "
                 >
-                  <el-button type="primary" @click="addRecord"
+                  <el-button type="primary" @click="addRecord(10)"
                     >添加运费账单</el-button
                   >
                 </div>
@@ -1394,7 +1394,7 @@
                     justify-content: flex-end;
                   "
                 >
-                  <el-button type="primary" @click="addRecord"
+                  <el-button type="primary" @click="addRecord(1)"
                     >添加出售账单</el-button
                   >
                 </div>
@@ -2009,6 +2009,7 @@ const getQRCode = () => {
     url: "http://127.0.0.1:8079",
     headers: {
       token: userStore.token,
+      // "Access-Control-Allow-Private-Network": true,
     },
     data: {
       CMD: "1",
@@ -2043,19 +2044,44 @@ const getQRCode = () => {
 };
 
 // 去添加账单页面
-const addRecord = () => {
+const addRecord = (index) => {
+  console.log(index);
   document
     .getElementById("purchaseDetail")
     .scrollIntoView({ behavior: "smooth" });
   let watchId = watchStateMsgData.value.id;
   let currentPath = route.path;
-  let billRedirectParams = {
-    isBack: true,
-    resource: "purchase-detail",
-    watchId: watchId,
-    redirectPath: currentPath,
-    activeName: activeName.value,
-  };
+  let billRedirectParams;
+  if (
+    index == 0 ||
+    index == 1 ||
+    index == 7 ||
+    index == 8 ||
+    index == 9 ||
+    index == 10
+  ) {
+    billRedirectParams = {
+      buyWatchSn: watchStateMsgData.value.buyWatchSn,
+      stockNo: watchStateMsgData.value.stockNo,
+      isBack: true,
+      resource: "purchase-detail",
+      watchId: watchId,
+      redirectPath: currentPath,
+      activeName: activeName.value,
+      index,
+    };
+  } else {
+    billRedirectParams = {
+      isBack: true,
+      resource: "purchase-detail",
+      watchId: watchId,
+      redirectPath: currentPath,
+      activeName: activeName.value,
+    };
+  }
+
+  console.log("要传递的参数", billRedirectParams);
+
   _sessionStorage.set("purchase_redirect_params", billRedirectParams);
   router.push({ path: "/bill/enter" });
 };

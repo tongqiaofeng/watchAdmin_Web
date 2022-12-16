@@ -610,8 +610,21 @@ const isShow = ref(false);
 onMounted(() => {
   isShow.value = true;
   let redirectParams = _sessionStorage.get("purchase_redirect_params");
+  console.log("传输来的数据", redirectParams);
   if (redirectParams && redirectParams.resource == "purchase-detail") {
     isBack.value = true;
+    if (redirectParams.index) {
+      billData.value.tradeType = redirectParams.index;
+
+      productListMsg.value.watchSn = redirectParams.buyWatchSn;
+      productListMsg.value.stockNo = redirectParams.stockNo;
+
+      if (productListMsg.value.stockNo) {
+        searchCode(productListMsg.value.stockNo, "", 1);
+      } else {
+        searchCode(productListMsg.value.watchSn, "", 2);
+      }
+    }
   }
 });
 
@@ -649,16 +662,16 @@ const personShow = () => {
     billData.value.tradeType == 3 ||
     billData.value.tradeType == 5 ||
     billData.value.tradeType == 7 ||
-    billData.value.tradeType == 8 ||
-    billData.value.tradeType == 9 ||
-    billData.value.tradeType == 10
+    billData.value.tradeType == 8
   ) {
     return "收款账户";
   } else if (
     billData.value.tradeType == 0 ||
     billData.value.tradeType == 2 ||
     billData.value.tradeType == 4 ||
-    billData.value.tradeType == 6
+    billData.value.tradeType == 6 ||
+    billData.value.tradeType == 9 ||
+    billData.value.tradeType == 10
   ) {
     return "支出账户";
   }
@@ -1189,7 +1202,7 @@ const addCode = () => {
       duration: 5000,
     });
   } else {
-    if (!productListMsg.value.stockNo || !productListMsg.value.watchSn) {
+    if (!productListMsg.value.stockNo && !productListMsg.value.watchSn) {
       ElMessage.error({
         message: "请输入货号/机芯号查找产品",
         showClose: true,
@@ -1382,6 +1395,7 @@ const goBack = () => {
 
 // 监听路由离开
 onBeforeRouteLeave((to, from, next) => {
+  console.log("路由离开");
   let redirectParams = _sessionStorage.get("purchase_redirect_params");
   if (redirectParams) {
     _sessionStorage.remove("purchase_redirect_params");

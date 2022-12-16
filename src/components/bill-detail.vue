@@ -568,17 +568,16 @@ const isSam = () => {
 
 // 支出賬戶/收款賬戶
 const personShow = (value) => {
-  if (
-    value == 1 ||
-    value == 3 ||
-    value == 5 ||
-    value == 7 ||
-    value == 8 ||
+  if (value == 1 || value == 3 || value == 5 || value == 7 || value == 8) {
+    return "收款账户";
+  } else if (
+    value == 0 ||
+    value == 2 ||
+    value == 4 ||
+    value == 6 ||
     value == 9 ||
     value == 10
   ) {
-    return "收款账户";
-  } else if (value == 0 || value == 2 || value == 4 || value == 6) {
     return "支出账户";
   }
 };
@@ -866,7 +865,7 @@ const addCode = () => {
       duration: 5000,
     });
   } else {
-    if (!productListMsg.value.stockNo || !productListMsg.value.watchSn) {
+    if (!productListMsg.value.stockNo && !productListMsg.value.watchSn) {
       ElMessage.error({
         message: "请输入货号/机芯号查找产品",
         showClose: true,

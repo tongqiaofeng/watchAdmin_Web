@@ -7,11 +7,14 @@
         <el-form inline class="stock-search-form">
           <el-form-item label="库存地：">
             <el-select
-              v-model="stockSearchParams.warehouseId"
+              style="width: 260px"
+              v-model="stockSearchParams.warehouseIdList"
               size="large"
               placeholder="请选择库存地"
+              multiple
+              clearable
             >
-              <el-option label="全部" :value="'null'"></el-option>
+              <!-- <el-option label="全部" :value="'null'"></el-option> -->
               <el-option
                 v-for="item in warehouseList"
                 :key="item.id"
@@ -23,10 +26,11 @@
           </el-form-item>
           <el-form-item label="采购员：">
             <el-select
-              v-model="stockSearchParams.buyerId"
+              v-model="stockSearchParams.buyerIdList"
               class="m-2"
               placeholder="请选择"
               size="large"
+              multiple
               clearable
             >
               <el-option
@@ -100,8 +104,8 @@
                 <el-image
                   preview-teleported
                   style="width: 90px; height: 90px; z-index: 9999"
-                  :src="base_request_url + '/file/' + scope.row.previewImg"
-                  :preview-src-list="scope.row.imgList"
+                  :src="base_request_url + scope.row.pics"
+                  :preview-src-list="[base_request_url + scope.row.pics]"
                 />
               </template>
             </el-table-column>
@@ -821,14 +825,14 @@ const stockList = ref([]);
 const loading = ref(false);
 const stockSearchStates = ref([0, 1, 2]);
 const stockSearchParams = reactive({
-  buyerId: null, // 采购员id,null:所有
+  buyerIdList: [], // 采购员id,null:所有
   year: "",
   keyword: "", // 关键字，品牌，型号，机芯号，货号
   page: 1,
   pageNum: 10,
-  sellerId: null, // 销售员id,null:所有
   stateList: null, // 库存状态，null:所有,0：采购中:1:运输中,2:已入库,3:已出售,4:已出库,5:已寄卖,6:客人寄卖 7未出售
-  warehouseId: "null", // 库存地,null:所有
+  sellerIdList: [],
+  warehouseIdList: [],
 });
 
 const warehouseList = ref([]); // 库存仓库列表
@@ -935,23 +939,24 @@ const getStockList = async () => {
   loading.value = false;
   if (res.code === 200) {
     let list = res.data.list;
-    stockList.value = list.map((item) => {
-      item["imgList"] = [];
-      if (item.pics) {
-        item["previewImg"] = item.pics.split("|")[0] || "";
+    stockList.value = list;
+    // .map((item) => {
+    // 	item['imgList'] = [];
+    // 	if (item.pics) {
+    // 		item['previewImg'] = item.pics.split('|')[0] || '';
 
-        if (item.pics.indexOf("|") == -1) {
-          item["imgList"].push(base_request_url + "/file/" + item.pics);
-        } else {
-          for (const img of item.pics.split("|")) {
-            if (img) {
-              item["imgList"].push(base_request_url + "/file/" + img);
-            }
-          }
-        }
-      }
-      return item;
-    });
+    // 		if (item.pics.indexOf('|') == -1) {
+    // 			item['imgList'].push(base_request_url  + item.pics);
+    // 		} else {
+    // 			for (const img of item.pics.split('|')) {
+    // 				if (img) {
+    // 					item['imgList'].push(base_request_url + img);
+    // 				}
+    // 			}
+    // 		}
+    // 	}
+    // 	return item;
+    // });
     console.log("列表", stockList.value);
     total.value = res.data.total;
   }

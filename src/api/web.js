@@ -187,3 +187,10 @@ export const watchPublicPriceList = (id) => {
     method: 'GET'
   })
 }
+
+export const updateCache = () => {
+  return request({
+		url: '/updateCache',
+		method: 'GET'
+	});
+}

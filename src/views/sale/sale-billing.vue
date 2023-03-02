@@ -570,7 +570,7 @@ async function getNotSoldList() {
     page: page.value,
     pageNum: 5,
     keyword: searchKey.value,
-    warehouseIdList: warehouseId.value,
+    warehouseIdList: warehouseId.value ? [warehouseId.value] : null,
     stateList: [0, 1, 2],
   });
 

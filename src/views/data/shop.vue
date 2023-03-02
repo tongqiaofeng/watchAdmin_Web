@@ -16,7 +16,7 @@
             <div class="search-box flex-center">
               <el-input
                 class="search-input"
-                placeholder="店铺名称、地址、国家等信息"
+                placeholder="可输入店铺名称、地址、国家名称、手表品牌进行查询"
                 v-model="keyword"
                 clearable
               >

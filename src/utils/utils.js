@@ -2,7 +2,7 @@
  * 清空对象的属性值数据
  * @param {*} obj 
  */
-export const resetObjValues = (obj) => {
+ export const resetObjValues = (obj) => {
   if (!obj) return false;
   Object.keys(obj).forEach(key => {
     if (obj[key] && typeof obj[key] === 'object') {
@@ -28,7 +28,7 @@ export const deepCopy = (targetObj) => {
     const result = Array.isArray(targetObj) ? [] : {};
     for (let i in targetObj) {
       if (typeof targetObj[i] === 'object') {
-        result[i] = this.deepCopy(targetObj[i]);
+        result[i] = deepCopy(targetObj[i]);
       } else {
         result[i] = targetObj[i];
       }

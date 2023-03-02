@@ -5,7 +5,7 @@
       <div class="back-style">
         <el-form inline>
           <el-form-item label="库存状态">
-            <el-select size="large" v-model="checkData.state">
+            <el-select size="large" clearable v-model="checkData.state">
               <el-option
                 v-for="item in stateList"
                 :key="item.value"
@@ -480,7 +480,7 @@ const editProduct = (item) => {
 const pageSel = ref(0);
 const sellTime = ref("");
 const checkData = ref({
-  state: 3,
+  state: null, // 3
   keyword: "",
   page: 1,
   pageNum: 5,

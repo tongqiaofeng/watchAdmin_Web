@@ -1,11 +1,11 @@
 /**
  * 清空对象的属性值数据
- * @param {*} obj 
+ * @param {*} obj
  */
- export const resetObjValues = (obj) => {
+export const resetObjValues = (obj) => {
   if (!obj) return false;
-  Object.keys(obj).forEach(key => {
-    if (obj[key] && typeof obj[key] === 'object') {
+  Object.keys(obj).forEach((key) => {
+    if (obj[key] && typeof obj[key] === "object") {
       if (Array.isArray(obj[key])) {
         obj[key] = [];
       } else {
@@ -14,20 +14,20 @@
     } else {
       obj[key] = null;
     }
-  })
+  });
   return obj;
-}
+};
 
 /**
  * 深拷贝
- * @param {*} targetObj 
- * @returns 
+ * @param {*} targetObj
+ * @returns
  */
 export const deepCopy = (targetObj) => {
-  if (typeof targetObj === 'object') {
+  if (typeof targetObj === "object") {
     const result = Array.isArray(targetObj) ? [] : {};
     for (let i in targetObj) {
-      if (typeof targetObj[i] === 'object') {
+      if (typeof targetObj[i] === "object") {
         result[i] = deepCopy(targetObj[i]);
       } else {
         result[i] = targetObj[i];
@@ -37,18 +37,18 @@ export const deepCopy = (targetObj) => {
   } else {
     return targetObj;
   }
-}
+};
 
 /**
  * 是否是json
- * @param {*} str 
+ * @param {*} str
  * @returns Boolean
  */
 export const isJson = (str) => {
-  if (typeof str === 'string') {
+  if (typeof str === "string") {
     try {
       let obj = JSON.parse(str);
-      if (obj && typeof obj === 'object') {
+      if (obj && typeof obj === "object") {
         return true;
       }
     } catch (e) {
@@ -57,12 +57,12 @@ export const isJson = (str) => {
   } else {
     return false;
   }
-}
+};
 
 /**
  * 千分价格
- * @param {*} num 
- * @returns 
+ * @param {*} num
+ * @returns
  */
 export const formatNumberRgx = (num) => {
   if (num !== null && num !== undefined) {
@@ -72,14 +72,14 @@ export const formatNumberRgx = (num) => {
   } else {
     return 0;
   }
-}
+};
 
 // 負數及带小数數字的獲取
 export const getPriceNum = (value) => {
   console.log(value);
   if (value != "" && value != null) {
     let reg = /(\-)?\d+[0-9]+([.]{1}[0-9]+){0,1}/g;
-    let m = value.toString().replace(/,/g, '').match(reg);
+    let m = value.toString().replace(/,/g, "").match(reg);
     console.log(m);
     return m ? m.join("") : value;
   } else {
@@ -92,7 +92,7 @@ export const getIntegerNum = (value) => {
   if (value != "" && value != null) {
     let reg = /(\-)?\d+[0-9]+([0-9]+){0,1}/g;
 
-    let m = value.toString().replace(/,/g, '').match(reg);
+    let m = value.toString().replace(/,/g, "").match(reg);
     console.log(m);
     return m ? m.join("") : value;
   } else {
@@ -112,13 +112,13 @@ export const getDateNow = () => {
   date = date.toString().padStart(2, "0");
   let defaultDate = `${year}-${month}-${date}`; //
   return defaultDate;
-}
+};
 
 /**
  * 比较两个日期天数
- * @param {*} date_1 
- * @param {*} date_2 
- * @returns 
+ * @param {*} date_1
+ * @param {*} date_2
+ * @returns
  */
 export const diffDay = (date_1, date_2) => {
   let totalDays, diffDate;
@@ -128,64 +128,65 @@ export const diffDay = (date_1, date_2) => {
 
   totalDays = Math.floor(diffDate / (1000 * 3600 * 24)); // 向下取整
   return totalDays;
-}
+};
 
 // 交易方式
-const tradeTypeList = [{
-    label: '买入',
-    value: 0
+const tradeTypeList = [
+  {
+    label: "买入",
+    value: 0,
   },
   {
-    label: '卖出',
-    value: 1
+    label: "卖出",
+    value: 1,
   },
   {
-    label: '转账',
-    value: 2
+    label: "转账",
+    value: 2,
   },
   {
-    label: '买入退款',
-    value: 3
+    label: "买入退款",
+    value: 3,
   },
   {
-    label: '卖出退款',
-    value: 4
+    label: "卖出退款",
+    value: 4,
   },
   {
-    label: '其他收入',
-    value: 5
+    label: "其他收入",
+    value: 5,
   },
   {
-    label: '其他支出',
-    value: 6
+    label: "其他支出",
+    value: 6,
   },
   {
-    label: '税金',
-    value: 7
+    label: "税金",
+    value: 7,
   },
   {
-    label: '佣金',
-    value: 8
+    label: "佣金",
+    value: 8,
   },
   {
-    label: '小费',
-    value: 9
+    label: "小费",
+    value: 9,
   },
   {
-    label: '运费',
-    value: 10
+    label: "运费",
+    value: 10,
   },
-]
+];
 export const tradeTypeRgx = function (item) {
   for (let i = 0; i < tradeTypeList.length; ++i) {
-    if (item == tradeTypeList[i].value)
-      return tradeTypeList[i].label
+    if (item == tradeTypeList[i].value) return tradeTypeList[i].label;
   }
   return "";
 };
 
 // 库存状态
-const stateList = [{
+const stateList = [
+  {
     label: "采购中",
     value: 0,
   },
@@ -209,11 +210,10 @@ const stateList = [{
     label: "已寄卖",
     value: 5,
   },
-]
+];
 export const stateRgx = function (item) {
   for (let i = 0; i < stateList.length; ++i) {
-    if (item == stateList[i].value)
-      return stateList[i].label
+    if (item == stateList[i].value) return stateList[i].label;
   }
   return "";
 };
@@ -237,4 +237,36 @@ export const productCodeGet = function (item, flag) {
   } else {
     return "/";
   }
+};
+
+export const getUploadFileType = function (suffix) {
+  let imgArr = [
+    "jpg",
+    "png",
+    "gif",
+    "jpeg",
+    "tiff",
+    "tif",
+    "bmp",
+    "jfif",
+    "JPG",
+  ];
+
+  let videoArr = [
+    "avi",
+    "wmv",
+    "mpg",
+    "mpeg",
+    "3gp",
+    "mov",
+    "mp4",
+    "rmvb",
+    "mkv",
+  ];
+  if (imgArr.includes(suffix)) {
+    return "img";
+  } else if (videoArr.includes(suffix)) {
+    return "video";
+  }
+  return null;
 };

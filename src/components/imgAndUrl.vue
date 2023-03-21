@@ -114,6 +114,9 @@
                   </template>
                 </draggable>
               </el-form-item>
+              <el-form-item v-if="imgAndUrlData.viewType === '1'" label="查看更多：" prop="viewMore">
+                <el-input size="large" v-model="imgAndUrlData.viewMore" placeholder="请输入跳转路径"></el-input>
+              </el-form-item>
             </div>
           </el-form>
           <div style="margin-top: 40px; text-align: right">
@@ -132,7 +135,10 @@
               <el-input size="large" v-model="proudctkeyword" @change="keywordChange"
                 placeholder="可输入手表品牌、系列、型号、昵称简称、是否特别版等搜索" clearable>
               </el-input>
-              <el-button style="margin-left: 10px" type="primary" size="large" @click="searchWatch">查 询</el-button>
+              <el-button style="margin-left: 10px" type="primary" size="large" @click="checkSearch">查 询</el-button>
+
+              <el-button style="margin-left: 30px" type="primary" size="large"
+                @click="updateWatchMsgDialog = true">筛选</el-button>
             </div>
           </div>
           <el-table ref="singleTable" :data="deviceFilterList" :row-key="getRowKeys" :key="1" highlight-current-row
@@ -158,6 +164,42 @@
               </el-pagination>
             </div>
           </div>
+
+          <el-dialog title="筛选" width="600px" v-if="updateWatchMsgDialog" v-model="updateWatchMsgDialog" center>
+            <el-form label-width="98px" :model="watchForm">
+              <el-form-item label="是否为精品：">
+                <el-radio-group v-model="watchForm.isAuction">
+                  <el-radio :label="1">是</el-radio>
+                  <el-radio :label="0">否</el-radio>
+                </el-radio-group>
+              </el-form-item>
+              <el-form-item label="是否为新货：">
+                <el-radio-group v-model="watchForm.isNewStyle">
+                  <el-radio :label="1">是</el-radio>
+                  <el-radio :label="0">否</el-radio>
+                </el-radio-group>
+              </el-form-item>
+              <el-form-item label="是否热卖：">
+                <el-radio-group v-model="watchForm.isTop">
+                  <el-radio :label="1">是</el-radio>
+                  <el-radio :label="0">否</el-radio>
+                </el-radio-group>
+              </el-form-item>
+              <el-form-item label="是否特价：">
+                <el-radio-group v-model="watchForm.isDiscount">
+                  <el-radio :label="1">是</el-radio>
+                  <el-radio :label="0">否</el-radio>
+                </el-radio-group>
+              </el-form-item>
+            </el-form>
+            <template #footer>
+              <div>
+                <el-button size="large" @click="updateWatchMsgDialog = false">取 消</el-button>
+                <el-button size="large" @click="checkSearch" type="primary" v-preventClick>确 定
+                </el-button>
+              </div>
+            </template>
+          </el-dialog>
         </div>
       </div>
     </div>
@@ -197,12 +239,9 @@ let imgAndUrlData = ref({
   imgUrl: "",
   relationType: "0",
   dataStr: '',
-  dataStrList: []
+  dataStrList: [],
+  viewMore: ''
 });
-
-if (updateMsg.value.viewType) {
-  Object.assign(imgAndUrlData.value, updateMsg.value)
-}
 
 const dataMsg = () => {
   imgAndUrlData.value.viewType = imgAndUrlData.value.viewType + "";
@@ -215,19 +254,24 @@ const dataMsg = () => {
   }
 }
 
-dataMsg()
+if (updateMsg.value.viewType) {
+  Object.assign(imgAndUrlData.value, updateMsg.value)
+  dataMsg()
+}
 
-watch(props.updateMsg, (newVal, oldVal) => {
-  console.log('新数据', newVal);
+watch(() => props.updateMsg, (newVal) => {
+  console.log('新数据===========', newVal);
 
-  if (newVal) {
+  if (newVal.relationType) {
     imgAndUrlData.value = newVal;
     dataMsg()
   }
-})
+},
+  {
+    immediate: true,
+  })
 
 const emit = defineEmits(["imgAndUrlSubmit"]);
-
 
 let showImgData = ref({
   imgUrl: "",
@@ -240,7 +284,6 @@ const classifyImgRules = reactive([]);
 const updateI = ref(null);
 
 onMounted(() => {
-
   searchWatch();
 });
 
@@ -258,7 +301,8 @@ const classifyTypeChange = () => {
 
 // 提交
 const addClassify = async () => {
-  let list = imgAndUrlData.value.dataStrList
+  console.log(imgAndUrlData.value);
+  let list = imgAndUrlData.value.dataStrList;
   imgAndUrlData.value.dataStr = JSON.stringify(list);
   const { data: res } = await Api.webConfigSave(imgAndUrlData.value)
   console.log("提交网页设置", res);
@@ -386,11 +430,20 @@ const deviceFilterList = ref([]);
 const proudctkeyword = ref("");
 const page = ref(1);
 const total = ref(0);
+let watchForm = reactive({
+  isAuction: 0,
+  isNewStyle: 0,
+  isTop: 0,
+  isDiscount: 0,
+})
+const updateWatchMsgDialog = ref(false)
 const searchWatch = async () => {
   const { data: res } = await Api.watchSearchCheck({
     keyword: proudctkeyword.value,
     page: page.value,
     pageNum: 5,
+    ...watchForm,
+    isDisplay: 1
   });
 
   if (res.code === 200) {
@@ -398,6 +451,11 @@ const searchWatch = async () => {
     total.value = res.data.total;
   }
 };
+const checkSearch = () => {
+  page.value = 1;
+  updateWatchMsgDialog.value = false;
+  searchWatch()
+}
 </script>
 
 <style lang="scss" scoped>

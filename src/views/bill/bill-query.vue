@@ -6,63 +6,31 @@
         <div>
           <el-form inline label-width="55px">
             <el-form-item label="日期：">
-              <el-date-picker
-                size="large"
-                v-model="time"
-                type="daterange"
-                range-separator="至"
-                format="YYYY-MM-DD"
-                value-format="YYYY-MM-DD"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-              >
+              <el-date-picker size="large" v-model="time" type="daterange" range-separator="至" format="YYYY-MM-DD"
+                value-format="YYYY-MM-DD" start-placeholder="开始日期" end-placeholder="结束日期">
               </el-date-picker>
             </el-form-item>
             <el-form-item label="账户">
-              <el-select
-                size="large"
-                style="width: 100%"
-                v-model="personId"
-                placeholder="请选择"
-              >
-                <el-option
-                  v-for="(item, index) in userList"
-                  :key="index"
-                  :label="item.nick"
-                  :value="item.id"
-                ></el-option>
+              <el-select size="large" style="width: 100%" v-model="personId" placeholder="请选择">
+                <el-option v-for="(item, index) in userList" :key="index" :label="item.nick" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="">
-              <el-input
-                size="large"
-                style="width: 360px"
-                v-model="keyword"
-                placeholder="可输入产品货号、产品描述和账单备注进行查询"
-                clearable
-              ></el-input>
+              <el-input size="large" style="width: 360px" v-model="keyword" placeholder="可输入产品货号、产品描述和账单备注进行查询"
+                clearable></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button size="large" type="primary" @click="checkBillData"
-                >查询</el-button
-              >
+              <el-button size="large" type="primary" @click="checkBillData">查询</el-button>
             </el-form-item>
             <el-form-item>
-              <el-button size="large" type="primary" @click="exportData"
-                >导出数据</el-button
-              >
+              <el-button size="large" type="primary" @click="exportData">导出数据</el-button>
             </el-form-item>
           </el-form>
         </div>
         <div v-show="isCompany == 0">
           <el-tabs v-model="activeName">
             <el-tab-pane label="统计列表" name="first">
-              <el-table
-                :data="accountList"
-                style="width: 800px"
-                border
-                @row-dblclick="checkThisList"
-              >
+              <el-table :data="accountList" style="width: 800px" border @row-dblclick="checkThisList">
                 <el-table-column align="center" width="80px">
                   <template #default="scope">
                     <div>
@@ -72,13 +40,11 @@
                 </el-table-column>
                 <el-table-column align="center" label="信息">
                   <template #default="scope">
-                    <div
-                      style="
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                      "
-                    >
+                    <div style="
+                          display: flex;
+                          align-items: center;
+                          justify-content: center;
+                        ">
                       <span style="font-size: 14px">公司欠</span>
                       <span>{{ scope.row.nick }}</span>
                     </div>
@@ -87,142 +53,94 @@
                 <el-table-column align="center" label="欠款总数">
                   <template #default="scope">
                     <div>
-                      <span
-                        :style="{
-                          color:
-                            scope.row.personTotalMoney < 0 ? 'red' : '#606266',
-                        }"
-                        >{{ formatNumberRgx(scope.row.personTotalMoney)
-                        }}<span style="margin-left: 5px; font-size: 12px">{{
-                          personAllCurrency
-                        }}</span></span
-                      >
+                      <span :style="{
+                        color:
+                          scope.row.personTotalMoney < 0 ? 'red' : '#606266',
+                      }">{{ formatNumberRgx(scope.row.personTotalMoney)
+}}<span style="margin-left: 5px; font-size: 12px">{{
+  personAllCurrency
+}}</span></span>
                     </div>
                   </template>
                 </el-table-column>
               </el-table>
             </el-tab-pane>
             <el-tab-pane label="记录列表" name="second">
-              <el-table
-                border
-                :data="billList"
-                style="width: 100%"
-                @row-click="delBill"
-                @row-dblclick="updateBill"
-                v-loading="loading"
-                element-loading-text="加载中..."
-                element-loading-spinner="el-icon-loading"
-              >
+              <el-table border :data="billList" style="width: 100%" @row-click="delBill" @row-dblclick="updateBill"
+                v-loading="loading" element-loading-text="加载中..." element-loading-spinner="el-icon-loading">
                 <el-table-column align="center" prop="time" label="日期">
                   <template #default="scope">
-                    <div
-                      :style="{
-                        color:
-                          isRed(scope.row.flag, scope.row.settleMoney) == 1
-                            ? 'red'
-                            : '#606266',
-                      }"
-                    >
+                    <div :style="{
+                      color:
+                        isRed(scope.row.flag, scope.row.settleMoney) == 1
+                          ? 'red'
+                          : '#606266',
+                    }">
                       {{ scope.row.time }}
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column
-                  width="100px"
-                  align="center"
-                  prop="tradeType"
-                  label="交易类型"
-                >
+                <el-table-column width="100px" align="center" prop="tradeType" label="交易类型">
                   <template #default="scope">
-                    <div
-                      :style="{
-                        color:
-                          isRed(scope.row.flag, scope.row.settleMoney) == 1
-                            ? 'red'
-                            : '#606266',
-                      }"
-                    >
+                    <div :style="{
+                      color:
+                        isRed(scope.row.flag, scope.row.settleMoney) == 1
+                          ? 'red'
+                          : '#606266',
+                    }">
                       {{ tradeTypeRgx(scope.row.tradeType) }}
                     </div>
                   </template>
                 </el-table-column>
                 <el-table-column align="center" prop="watchList" label="货号">
                   <template #default="scope">
-                    <div
-                      :style="{
-                        color:
-                          isRed(scope.row.flag, scope.row.settleMoney) == 1
-                            ? 'red'
-                            : '#606266',
-                      }"
-                      v-html="productCodeGet(scope.row.watchList, 1)"
-                    ></div>
+                    <div :style="{
+                      color:
+                        isRed(scope.row.flag, scope.row.settleMoney) == 1
+                          ? 'red'
+                          : '#606266',
+                    }" v-html="productCodeGet(scope.row.watchList, 1)"></div>
                   </template>
                 </el-table-column>
                 <el-table-column align="center" prop="watchList" label="机芯号">
                   <template #default="scope">
-                    <div
-                      :style="{
-                        color:
-                          isRed(scope.row.flag, scope.row.settleMoney) == 1
-                            ? 'red'
-                            : '#606266',
-                      }"
-                      v-html="productCodeGet(scope.row.watchList, 2)"
-                    ></div>
+                    <div :style="{
+                      color:
+                        isRed(scope.row.flag, scope.row.settleMoney) == 1
+                          ? 'red'
+                          : '#606266',
+                    }" v-html="productCodeGet(scope.row.watchList, 2)"></div>
                   </template>
                 </el-table-column>
-                <el-table-column
-                  width="250px"
-                  align="center"
-                  prop="productDes"
-                  label="产品描述"
-                >
+                <el-table-column width="250px" align="center" prop="productDes" label="产品描述">
                   <template #default="scope">
-                    <div
-                      :style="{
-                        color:
-                          isRed(scope.row.flag, scope.row.settleMoney) == 1
-                            ? 'red'
-                            : '#606266',
-                      }"
-                    >
-                      <el-tooltip
-                        effect="light"
-                        place="top-start"
-                        v-if="scope.row.productDes"
-                      >
+                    <div :style="{
+                      color:
+                        isRed(scope.row.flag, scope.row.settleMoney) == 1
+                          ? 'red'
+                          : '#606266',
+                    }">
+                      <el-tooltip effect="light" place="top-start" v-if="scope.row.productDes">
                         <template #content>
-                          <div
-                            v-html="
-                              scope.row.productDes.replace(/[\r\n]/g, '<br />')
-                            "
-                          ></div>
-                        </template>
-                        <div
-                          class="font-warp"
-                          v-html="
+                          <div v-html="
                             scope.row.productDes.replace(/[\r\n]/g, '<br />')
-                          "
-                        ></div>
+                          "></div>
+                        </template>
+                        <div class="font-warp" v-html="
+                          scope.row.productDes.replace(/[\r\n]/g, '<br />')
+                        "></div>
                       </el-tooltip>
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column
-                  align="center"
-                  prop="foreignMoney"
-                  label="外币金额"
-                >
+                <el-table-column align="center" prop="foreignMoney" label="外币金额">
                   <template #default="scope">
-                    <div
-                      :style="{
-                        color:
-                          isRed(scope.row.flag, scope.row.settleMoney) == 1
-                            ? 'red'
-                            : '#606266',
-                      }"
-                    >
+                    <div :style="{
+                      color:
+                        isRed(scope.row.flag, scope.row.settleMoney) == 1
+                          ? 'red'
+                          : '#606266',
+                    }">
                       {{
                         isFanMoney(
                           scope.row.flag,
@@ -234,42 +152,30 @@
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column
-                  align="center"
-                  prop="foreignToSettleRate"
-                  label="汇率"
-                >
+                <el-table-column align="center" prop="foreignToSettleRate" label="汇率">
                   <template #default="scope">
-                    <div
-                      :style="{
-                        color:
-                          isRed(scope.row.flag, scope.row.settleMoney) == 1
-                            ? 'red'
-                            : '#606266',
-                      }"
-                    >
+                    <div :style="{
+                      color:
+                        isRed(scope.row.flag, scope.row.settleMoney) == 1
+                          ? 'red'
+                          : '#606266',
+                    }">
                       {{
                         scope.row.foreignToSettleRate == ""
-                          ? "/"
-                          : scope.row.foreignToSettleRate
+                        ? "/"
+                        : scope.row.foreignToSettleRate
                       }}
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column
-                  align="center"
-                  prop="settleMoney"
-                  label="结算金额"
-                >
+                <el-table-column align="center" prop="settleMoney" label="结算金额">
                   <template #default="scope">
-                    <div
-                      :style="{
-                        color:
-                          isRed(scope.row.flag, scope.row.settleMoney) == 1
-                            ? 'red'
-                            : '#606266',
-                      }"
-                    >
+                    <div :style="{
+                      color:
+                        isRed(scope.row.flag, scope.row.settleMoney) == 1
+                          ? 'red'
+                          : '#606266',
+                    }">
                       {{
                         isFanHkPrice(
                           scope.row.flag,
@@ -280,45 +186,27 @@
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column
-                  align="center"
-                  prop="receiveType"
-                  label="交易方式"
-                >
+                <el-table-column align="center" prop="receiveType" label="交易方式">
                   <template #default="scope">
-                    <div
-                      :style="{
-                        color:
-                          isRed(scope.row.flag, scope.row.settleMoney) == 1
-                            ? 'red'
-                            : '#606266',
-                      }"
-                    >
+                    <div :style="{
+                      color:
+                        isRed(scope.row.flag, scope.row.settleMoney) == 1
+                          ? 'red'
+                          : '#606266',
+                    }">
                       {{ scope.row.receiveType }}
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column
-                  width="250px"
-                  align="center"
-                  prop="remark"
-                  label="Remarks"
-                >
+                <el-table-column width="250px" align="center" prop="remark" label="Remarks">
                   <template #default="scope">
-                    <div
-                      :style="{
-                        color:
-                          isRed(scope.row.flag, scope.row.settleMoney) == 1
-                            ? 'red'
-                            : '#606266',
-                      }"
-                    >
-                      <el-tooltip
-                        class="item"
-                        effect="light"
-                        :content="scope.row.remark"
-                        placement="top-start"
-                      >
+                    <div :style="{
+                      color:
+                        isRed(scope.row.flag, scope.row.settleMoney) == 1
+                          ? 'red'
+                          : '#606266',
+                    }">
+                      <el-tooltip class="item" effect="light" :content="scope.row.remark" placement="top-start">
                         <div class="font-warp">{{ scope.row.remark }}</div>
                       </el-tooltip>
                     </div>
@@ -332,19 +220,13 @@
                   </template>
                 </el-table-column>
               </el-table>
-              <div
-                style="
-                  margin-top: 15px;
-                  display: flex;
-                  justify-content: flex-end;
-                "
-              >
-                <el-pagination
-                  @current-change="handleCurrentChange"
-                  :current-page="page"
-                  layout="total, prev, pager, next, jumper"
-                  :total="total"
-                />
+              <div style="
+                    margin-top: 15px;
+                    display: flex;
+                    justify-content: flex-end;
+                  ">
+                <el-pagination @current-change="handleCurrentChange" :current-page="page"
+                  layout="total, prev, pager, next, jumper" :total="total" />
               </div>
             </el-tab-pane>
           </el-tabs>
@@ -353,134 +235,86 @@
           <div class="right-title" v-if="personTotalMoney !== 0">
             公司欠
             {{ personName + "总数： " }}
-            <span
-              :style="{
-                color: personTotalMoney < 0 ? 'red' : '#000',
-              }"
-              >{{ formatNumberRgx(personTotalMoney)
-              }}<span style="margin-left: 5px; font-size: 12px">{{
-                personAllCurrency
-              }}</span></span
-            >
+            <span :style="{
+              color: personTotalMoney < 0 ? 'red' : '#000',
+            }">{{ formatNumberRgx(personTotalMoney)
+}}<span style="margin-left: 5px; font-size: 12px">{{
+  personAllCurrency
+}}</span></span>
           </div>
-          <el-table
-            border
-            :data="billList"
-            style="width: 100%"
-            @row-click="delBill"
-            @row-dblclick="updateBill"
-            v-loading="loading"
-            element-loading-text="加载中..."
-            element-loading-spinner="el-icon-loading"
-          >
+          <el-table border :data="billList" style="width: 100%" @row-click="delBill" @row-dblclick="updateBill"
+            v-loading="loading" element-loading-text="加载中..." element-loading-spinner="el-icon-loading">
             <el-table-column align="center" prop="time" label="日期">
               <template #default="scope">
-                <div
-                  :style="{
-                    color:
-                      isRed(scope.row.flag, scope.row.settleMoney) == 1
-                        ? 'red'
-                        : '#606266',
-                  }"
-                >
+                <div :style="{
+                  color:
+                    isRed(scope.row.flag, scope.row.settleMoney) == 1
+                      ? 'red'
+                      : '#606266',
+                }">
                   {{ scope.row.time }}
                 </div>
               </template>
             </el-table-column>
-            <el-table-column
-              width="100px"
-              align="center"
-              prop="tradeType"
-              label="交易类型"
-            >
+            <el-table-column width="100px" align="center" prop="tradeType" label="交易类型">
               <template #default="scope">
-                <div
-                  :style="{
-                    color:
-                      isRed(scope.row.flag, scope.row.settleMoney) == 1
-                        ? 'red'
-                        : '#606266',
-                  }"
-                >
+                <div :style="{
+                  color:
+                    isRed(scope.row.flag, scope.row.settleMoney) == 1
+                      ? 'red'
+                      : '#606266',
+                }">
                   {{ tradeTypeRgx(scope.row.tradeType) }}
                 </div>
               </template>
             </el-table-column>
             <el-table-column align="center" prop="watchList" label="货号">
               <template #default="scope">
-                <div
-                  :style="{
-                    color:
-                      isRed(scope.row.flag, scope.row.settleMoney) == 1
-                        ? 'red'
-                        : '#606266',
-                  }"
-                  v-html="productCodeGet(scope.row.watchList, 1)"
-                ></div>
+                <div :style="{
+                  color:
+                    isRed(scope.row.flag, scope.row.settleMoney) == 1
+                      ? 'red'
+                      : '#606266',
+                }" v-html="productCodeGet(scope.row.watchList, 1)"></div>
               </template>
             </el-table-column>
             <el-table-column align="center" prop="watchList" label="机芯号">
               <template #default="scope">
-                <div
-                  :style="{
-                    color:
-                      isRed(scope.row.flag, scope.row.settleMoney) == 1
-                        ? 'red'
-                        : '#606266',
-                  }"
-                  v-html="productCodeGet(scope.row.watchList, 2)"
-                ></div>
+                <div :style="{
+                  color:
+                    isRed(scope.row.flag, scope.row.settleMoney) == 1
+                      ? 'red'
+                      : '#606266',
+                }" v-html="productCodeGet(scope.row.watchList, 2)"></div>
               </template>
             </el-table-column>
-            <el-table-column
-              width="250px"
-              align="center"
-              prop="productDes"
-              label="产品描述"
-            >
+            <el-table-column width="250px" align="center" prop="productDes" label="产品描述">
               <template #default="scope">
-                <div
-                  :style="{
-                    color:
-                      isRed(scope.row.flag, scope.row.settleMoney) == 1
-                        ? 'red'
-                        : '#606266',
-                  }"
-                >
-                  <el-tooltip
-                    effect="light"
-                    place="top-start"
-                    v-if="scope.row.productDes"
-                  >
+                <div :style="{
+                  color:
+                    isRed(scope.row.flag, scope.row.settleMoney) == 1
+                      ? 'red'
+                      : '#606266',
+                }">
+                  <el-tooltip effect="light" place="top-start" v-if="scope.row.productDes">
                     <template #content>
-                      <div
-                        v-html="
-                          scope.row.productDes.replace(/[\r\n]/g, '<br />')
-                        "
-                      ></div>
+                      <div v-html="
+                        scope.row.productDes.replace(/[\r\n]/g, '<br />')
+                      "></div>
                     </template>
-                    <div
-                      class="font-warp"
-                      v-html="scope.row.productDes.replace(/[\r\n]/g, '<br />')"
-                    ></div>
+                    <div class="font-warp" v-html="scope.row.productDes.replace(/[\r\n]/g, '<br />')"></div>
                   </el-tooltip>
                 </div>
               </template>
             </el-table-column>
-            <el-table-column
-              align="center"
-              prop="foreignMoney"
-              label="外币金额"
-            >
+            <el-table-column align="center" prop="foreignMoney" label="外币金额">
               <template #default="scope">
-                <div
-                  :style="{
-                    color:
-                      isRed(scope.row.flag, scope.row.settleMoney) == 1
-                        ? 'red'
-                        : '#606266',
-                  }"
-                >
+                <div :style="{
+                  color:
+                    isRed(scope.row.flag, scope.row.settleMoney) == 1
+                      ? 'red'
+                      : '#606266',
+                }">
                   {{
                     isFanMoney(
                       scope.row.flag,
@@ -492,38 +326,30 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column
-              align="center"
-              prop="foreignToSettleRate"
-              label="汇率"
-            >
+            <el-table-column align="center" prop="foreignToSettleRate" label="汇率">
               <template #default="scope">
-                <div
-                  :style="{
-                    color:
-                      isRed(scope.row.flag, scope.row.settleMoney) == 1
-                        ? 'red'
-                        : '#606266',
-                  }"
-                >
+                <div :style="{
+                  color:
+                    isRed(scope.row.flag, scope.row.settleMoney) == 1
+                      ? 'red'
+                      : '#606266',
+                }">
                   {{
                     scope.row.foreignToSettleRate == ""
-                      ? "/"
-                      : scope.row.foreignToSettleRate
+                    ? "/"
+                    : scope.row.foreignToSettleRate
                   }}
                 </div>
               </template>
             </el-table-column>
             <el-table-column align="center" prop="settleMoney" label="结算金额">
               <template #default="scope">
-                <div
-                  :style="{
-                    color:
-                      isRed(scope.row.flag, scope.row.settleMoney) == 1
-                        ? 'red'
-                        : '#606266',
-                  }"
-                >
+                <div :style="{
+                  color:
+                    isRed(scope.row.flag, scope.row.settleMoney) == 1
+                      ? 'red'
+                      : '#606266',
+                }">
                   {{
                     isFanHkPrice(
                       scope.row.flag,
@@ -536,39 +362,25 @@
             </el-table-column>
             <el-table-column align="center" prop="receiveType" label="交易方式">
               <template #default="scope">
-                <div
-                  :style="{
-                    color:
-                      isRed(scope.row.flag, scope.row.settleMoney) == 1
-                        ? 'red'
-                        : '#606266',
-                  }"
-                >
+                <div :style="{
+                  color:
+                    isRed(scope.row.flag, scope.row.settleMoney) == 1
+                      ? 'red'
+                      : '#606266',
+                }">
                   {{ scope.row.receiveType }}
                 </div>
               </template>
             </el-table-column>
-            <el-table-column
-              width="250px"
-              align="center"
-              prop="remark"
-              label="Remarks"
-            >
+            <el-table-column width="250px" align="center" prop="remark" label="Remarks">
               <template #default="scope">
-                <div
-                  :style="{
-                    color:
-                      isRed(scope.row.flag, scope.row.settleMoney) == 1
-                        ? 'red'
-                        : '#606266',
-                  }"
-                >
-                  <el-tooltip
-                    class="item"
-                    effect="light"
-                    :content="scope.row.remark"
-                    placement="top-start"
-                  >
+                <div :style="{
+                  color:
+                    isRed(scope.row.flag, scope.row.settleMoney) == 1
+                      ? 'red'
+                      : '#606266',
+                }">
+                  <el-tooltip class="item" effect="light" :content="scope.row.remark" placement="top-start">
                     <div class="font-warp">{{ scope.row.remark }}</div>
                   </el-tooltip>
                 </div>
@@ -582,15 +394,9 @@
               </template>
             </el-table-column>
           </el-table>
-          <div
-            style="margin-top: 15px; display: flex; justify-content: flex-end"
-          >
-            <el-pagination
-              @current-change="handleCurrentChange"
-              :current-page="page"
-              layout="total, prev, pager, next, jumper"
-              :total="total"
-            />
+          <div style="margin-top: 15px; display: flex; justify-content: flex-end">
+            <el-pagination @current-change="handleCurrentChange" :current-page="page"
+              layout="total, prev, pager, next, jumper" :total="total" />
           </div>
         </div>
         <el-dialog title="删除账单" v-model="dialogDelVisible" width="520px">
@@ -599,24 +405,15 @@
           </div>
           <template #footer>
             <div>
-              <el-button size="large" @click="dialogDelVisible = false"
-                >取 消</el-button
-              >
-              <el-button size="large" type="primary" @click="delBillSure"
-                >确 定</el-button
-              >
+              <el-button size="large" @click="dialogDelVisible = false">取 消</el-button>
+              <el-button size="large" type="primary" @click="delBillSure">确 定</el-button>
             </div>
           </template>
         </el-dialog>
       </div>
       <div v-else style="width: 90%">
-        <BillDetail
-          :userList="userList"
-          :currencyList="currencyList"
-          :billUpdateId="billUpdateId"
-          :cnCurVal="currencyGlobal"
-          @updateBillSuccess="updateBillSuccess"
-        ></BillDetail>
+        <BillDetail :userList="userList" :currencyList="currencyList" :billUpdateId="billUpdateId"
+          :cnCurVal="currencyGlobal" @updateBillSuccess="updateBillSuccess"></BillDetail>
       </div>
     </div>
   </div>

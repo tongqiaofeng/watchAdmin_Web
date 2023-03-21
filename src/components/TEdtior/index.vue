@@ -7,10 +7,9 @@
 <script setup name="TEditor">
 import Editor from '@tinymce/tinymce-vue';
 import { reactive, ref, watch, onMounted } from 'vue';
-import { ElMessage } from 'element-plus';
-import config from '@/config/index';
-import { uploadFile } from '@/request/api/api';
-import { getUploadFileType } from '@/utils/utils';
+import uploadImg from "../../utils/uploadImgs";
+
+import { base_file_request_url } from '@/utils/request'
 
 import '/public/static/tinymce/tinymce.js';
 import '/public/static/tinymce/themes/silver/theme';
@@ -76,7 +75,6 @@ watch(
 		content.value = value;
 	},
 	{
-		deep: true,
 		immediate: true,
 	}
 );
@@ -84,6 +82,15 @@ watch(
 onMounted(() => {
 	Editor.props.init({});
 });
+
+const mode = import.meta.env.MODE;
+
+let assetsUrl;
+if (mode == 'development') {
+	assetsUrl = '/public';
+} else {
+	assetsUrl = base_file_request_url
+}
 
 const tiny = reactive({
 	apiKey: 'qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc',
@@ -97,10 +104,10 @@ const tiny = reactive({
 		autoresize_max_height: 550,
 		fontsize_formats:
 			'12px 14px 15px 16px 17px 18px 20px 24px 36px 48px 56px 72px',
-		language_url: config.assetsUrl + '/static/tinymce/langs/zh_CN.js',
-		skin_url: config.assetsUrl + '/static/tinymce/skins/ui/oxide',
+		language_url: assetsUrl + '/static/tinymce/langs/zh_CN.js',
+		skin_url: assetsUrl + '/static/tinymce/skins/ui/oxide',
 		content_css:
-			config.assetsUrl + '/static/tinymce/skins/content/default/content.css',
+			assetsUrl + '/static/tinymce/skins/content/default/content.css',
 		resize: 'both', //编辑器宽高是否可变，false-否,true-高可变，'both'-宽高均可，注意引号
 		branding: false,
 		default_link_target: '_blank',
@@ -120,75 +127,26 @@ const tiny = reactive({
 		images_upload_credentials: true,
 		paste_data_images: true, //图片是否可粘贴
 		file_picker_types: 'file image media',
-		images_upload_handler: (blobInfo, success, failure) => {
-			let files = blobInfo.blob();
-			if (files) {
-				const _uploadFile = async (file) => {
-					const res = await uploadFile(file);
-					if (res.errno == 1) {
-						ElMessage.warning(res.message);
-						failure(res.message);
-					} else {
-						let url = res.data.url;
-						ElMessage.success('上传成功');
-						success(config.baseFileUrl + url);
-					}
-				};
-				_uploadFile(files);
-			}
-		},
-		// 自定义上传文件
-		file_picker_callback: (callback, value, meta) => {
-			if (meta.filetype == 'media') {
-				const input = document.createElement('input');
-				input.setAttribute('type', 'file');
-				input.setAttribute('accept', 'video/*');
-				input.onchange = function () {
-					const files = this.files[0];
-					if (files) {
-						const fileType = files.type.split('/')[1];
-						const type = getUploadFileType(fileType);
-						if (type !== 'video') {
-							ElMessage.warning('请选择视频类型文件');
-							return;
-						} else {
-							const _uploadFile = async (file) => {
-								const res = await uploadFile(file);
-								if (res.errno == 1) {
-									ElMessage.warning(res.message);
-								} else {
-									let url = res.data.url;
-									ElMessage.success('上传成功');
-									callback(config.baseFileUrl + url, { title: file.name }); //将url显示在弹框输入框中
-								}
-							};
-							_uploadFile(files);
-						}
-					}
-				};
-				input.click(); // 自己触发
-			} else if (meta.filetype == 'file' || meta.filetype == 'image') {
-				// 上传文件
-				const input = document.createElement('input');
-				input.setAttribute('type', 'file');
-				input.onchange = function () {
-					const files = this.files[0];
-					if (files) {
-						const _uploadFile = async (file) => {
-							const res = await uploadFile(file);
-							if (res.errno == 1) {
-								ElMessage.warning(res.message);
-							} else {
-								let url = res.data.url;
-								ElMessage.success('上传成功');
-								callback(config.baseFileUrl + url);
-							}
-						};
-						_uploadFile(files);
-					}
-				};
-				input.click(); // 自己触发
-			}
+		/**
+				* 下面方法是为tinymce添加自定义插入图片按钮
+				* 借助iview的Upload组件,将图片先上传到存储云上，再将图片的存储地址放入编辑器内容
+				*/
+		// 图片上传三个参数，图片数据，成功时的回调函数，失败时的回调函数
+		images_upload_handler: async (blobInfo, success, failure) => {
+			let file = blobInfo.blob();
+			console.log(file);
+
+			uploadImg
+				.handleAdd_quill_editor(file)
+				.then((res) => {
+					console.log(res);
+					let pathUrl = res;
+					success(pathUrl);
+				})
+				.catch((err) => {
+					console.log(err);
+					failure("error");
+				});
 		},
 	},
 });

@@ -63,7 +63,7 @@
           </el-table>
           <div style="width: 100%; height: 50px">
             <div style="margin: 15px 0; position: absolute; right: 6%">
-              <el-pagination @current-change="handleCurrentChange" :current-page="filterForm.page"
+              <el-pagination @current-change="handleCurrentChange" :page-size="5" :current-page="filterForm.page"
                 layout="total, prev, pager, next, jumper" :total="total">
               </el-pagination>
             </div>
@@ -215,7 +215,7 @@ const watchFilterDialog = ref(false); // 过滤弹窗
 // 过滤条件
 const filterForm = reactive({
   page: 1,
-  pageNum: 10,
+  pageNum: 5,
   isDisplay: "1",
   keyword: "", // 关键词
   brandList: [], // 品牌列表

@@ -97,7 +97,8 @@ const updateSort = async (row) => {
 }
 // 修改
 const updateSeriesImg = (row) => {
-  Object.assign(updateMsg.value, row)
+  Object.assign(updateMsg.value, row);
+  console.log('----------', updateMsg.value);
   pageSel.value = 1;
 }
 // 添加

@@ -15,20 +15,14 @@
               <span>IOS下载</span>
             </div>
           </div>
-          <div
-            ref="qrcode1"
-            style="
-              position: absolute;
-              left: 110%;
-              bottom: 10px;
-              display: none;
-              z-index: 999;
-            "
-          >
-            <img
-              src="../../assets/imgs/ios.png"
-              style="width: 130px; height: 130px"
-            />
+          <div ref="qrcode1" style="
+                position: absolute;
+                left: 110%;
+                bottom: 10px;
+                display: none;
+                z-index: 999;
+              ">
+            <img src="../../assets/imgs/ios.png" style="width: 130px; height: 130px" />
           </div>
         </div>
         <div class="every-img">
@@ -40,20 +34,14 @@
               <span>安卓下载</span>
             </div>
           </div>
-          <div
-            ref="qrcode2"
-            style="
-              position: absolute;
-              left: 110%;
-              bottom: 10px;
-              display: none;
-              z-index: 999;
-            "
-          >
-            <img
-              src="../../assets/imgs/android.png"
-              style="width: 130px; height: 130px"
-            />
+          <div ref="qrcode2" style="
+                position: absolute;
+                left: 110%;
+                bottom: 10px;
+                display: none;
+                z-index: 999;
+              ">
+            <img src="../../assets/imgs/android.png" style="width: 130px; height: 130px" />
           </div>
         </div>
         <div class="every-img">
@@ -64,9 +52,7 @@
               </a>
             </div>
             <div class="bottom-text">
-              <span style="white-space: pre-wrap"
-                >网页版打印机驱动程序及安装说明</span
-              >
+              <span style="white-space: pre-wrap">网页版打印机驱动程序及安装说明</span>
             </div>
           </div>
         </div>
@@ -86,29 +72,15 @@
               <p>
                 <img :src="usernameImg" style="width: 19px; height: 20px" />
               </p>
-              <input
-                class="user-input"
-                type="text"
-                v-model="loginForm.user"
-                placeholder="请输入用户名"
-                autofocus="autofocus"
-                tabindex="1"
-                auto-complete="on"
-              />
+              <input class="user-input" type="text" v-model="loginForm.user" placeholder="请输入用户名" autofocus="autofocus"
+                tabindex="1" auto-complete="on" />
             </div>
             <div class="password" id="psw">
               <p>
                 <img :src="passwordImg" style="width: 19px; height: 20px" />
               </p>
-              <input
-                class="pass-input"
-                type="password"
-                v-model="loginForm.psw"
-                placeholder="请输入密码"
-                prefix-icon="el-icon-lock"
-                tabindex="2"
-                auto-complete="on"
-              />
+              <input class="pass-input" type="password" v-model="loginForm.psw" placeholder="请输入密码"
+                prefix-icon="el-icon-lock" tabindex="2" auto-complete="on" />
             </div>
           </div>
           <div class="login-button">
@@ -166,7 +138,7 @@ const login = async () => {
       ElMessage.error(res.data);
     }
     // console.log(res);
-  } catch (err) {}
+  } catch (err) { }
 };
 
 const qrCodeNo = () => {

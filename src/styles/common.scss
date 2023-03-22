@@ -1,54 +1,54 @@
-@import './variable.scss';
+@import "./variable.scss";
 @mixin scrollbar {
-    max-height: 88vh;
-    margin-bottom: 0.5vh;
-    overflow-y: auto;
-  
-    &::-webkit-scrollbar {
-      width: 0;
-      height: 0;
-      background: transparent;
-    }
-  
-    &::-webkit-scrollbar-thumb {
-      background-color: rgba(144, 147, 153, 0.3);
-      border-radius: 10px;
-    }
-  }
-  
-  @mixin base-scrollbar {
-    &::-webkit-scrollbar {
-      width: 10px;
-      height: 10px;
-    }
-  
-    &::-webkit-scrollbar-thumb {
-      background-color: #ddd;
-      background-clip: padding-box;
-      border: 3px solid transparent;
-      border-radius: 7px;
-    }
-  
-    &::-webkit-scrollbar-thumb:hover {
-      background-color: rgba(0, 0, 0, 0.5);
-    }
-  
-    &::-webkit-scrollbar-track {
-      background-color: transparent;
-    }
+  max-height: 88vh;
+  margin-bottom: 0.5vh;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    background: transparent;
   }
 
-  .icon-hover{
-    cursor: pointer;
-    &:hover {
-      background-color: $base-hover-color;
-    }
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(144, 147, 153, 0.3);
+    border-radius: 10px;
+  }
+}
+
+@mixin base-scrollbar {
+  &::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
   }
 
-  .i-icon:focus-visible{
-    border: none !important;
-    outline: none !important;
+  &::-webkit-scrollbar-thumb {
+    background-color: #ddd;
+    background-clip: padding-box;
+    border: 3px solid transparent;
+    border-radius: 7px;
   }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+}
+
+.icon-hover {
+  cursor: pointer;
+  &:hover {
+    background-color: $base-hover-color;
+  }
+}
+
+.i-icon:focus-visible {
+  border: none !important;
+  outline: none !important;
+}
 
 html {
   margin: 0;
@@ -120,17 +120,16 @@ html {
     width: 19px;
     height: 21px;
   }
-  
+
   .font {
     margin-left: 8px;
     font-size: 16px;
   }
 }
 
-.select-picker-width{
+.select-picker-width {
   min-width: 600px;
 }
-
 
 .bill-container {
   margin-bottom: 10px;
@@ -201,4 +200,10 @@ html {
   margin-right: 5px;
   font-size: 16px;
   color: #fff;
+}
+
+.news-release-container {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
 }

@@ -254,7 +254,6 @@ export const constantRoutes = [
               name: "homeContent",
             },
           },
-
           {
             path: "/webAdmin/news",
             name: "新闻管理",
@@ -262,6 +261,16 @@ export const constantRoutes = [
             meta: {
               title: "新闻管理",
               name: "newsAdmin",
+            },
+          },
+
+          {
+            path: "/webAdmin/service",
+            name: "客服管理",
+            component: () => import("@/views/admin/service-admin.vue"),
+            meta: {
+              title: "客服管理",
+              name: "serviceAdmin",
             },
           },
         ],

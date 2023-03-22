@@ -9,8 +9,6 @@ import Editor from '@tinymce/tinymce-vue';
 import { reactive, ref, watch, onMounted } from 'vue';
 import uploadImg from "../../utils/uploadImgs";
 
-import { base_file_request_url } from '@/utils/request'
-
 import '/public/static/tinymce/tinymce.js';
 import '/public/static/tinymce/themes/silver/theme';
 import '/public/static/tinymce/icons/default/icons.js';
@@ -89,7 +87,7 @@ let assetsUrl;
 if (mode == 'development') {
 	assetsUrl = '/public';
 } else {
-	assetsUrl = base_file_request_url
+	assetsUrl = 'http://oa.toptimeclub.com'
 }
 
 const tiny = reactive({

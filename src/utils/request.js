@@ -5,7 +5,7 @@ import router from "@/router/index";
 import { ElMessage } from "element-plus";
 
 const base_file_request_url = "http://192.168.0.164:80";
-// const base_request_url = 'https://hk.wistechx.cn/WatchExApi/api/watch/stock' // 正式
+// const base_file_request_url = "https://hk.wistechx.cn/WatchExApi"; // 正式
 
 const base_request_url = base_file_request_url + "/api/watch/stock";
 
@@ -23,7 +23,7 @@ request.interceptors.request.use((config) => {
   if (userStore.token) {
     config.headers.common["token"] = userStore.token;
   }
-  console.log(config);
+  // console.log(config);
   let url = "";
   url = config.url.indexOf("?") === -1 ? config.url : config.url.split("?")[0];
   switch (url) {

@@ -59,14 +59,19 @@
         </div>
 
         <el-form label-width="105px" ref="newsFormRef" :model="newsFormData" :rules="newsFormRules">
-          <div>
-            <el-form-item label="新闻标题：" prop="title">
-              <el-input size="large" v-model="newsFormData.title" placeholder="请输入"></el-input>
-            </el-form-item>
-          </div>
+          <el-form-item label="新闻标题：" prop="title">
+            <el-input size="large" v-model="newsFormData.title" placeholder="请输入"></el-input>
+          </el-form-item>
+          <el-form-item label="发布时间：" prop="gmtCreate">
+            <el-date-picker size="large" v-model="newsFormData.gmtCreate" type="date" format="YYYY-MM-DD"
+              value-format="YYYY-MM-DD" placeholder="请选择"></el-date-picker>
+          </el-form-item>
           <el-form-item label="新闻正文：" id="releaseCon" prop="content">
             <TEdtior ref="editorCpnRef" :content="newsFormData.content">
             </TEdtior>
+          </el-form-item>
+          <el-form-item label="图片地址:">
+            <el-input size="large" v-model="newsFormData.pics" placeholder="请输入"></el-input>
           </el-form-item>
           <el-form-item label="图片/视频：" prop="pics">
             <uploadOneImg :imgUrl="newsFormData.pics" :imgType="3" @imgChange="imgBackChange">
@@ -102,9 +107,11 @@ import { reactive, ref, onMounted, nextTick } from 'vue';
 import { ElMessage } from 'element-plus';
 
 import { base_request_url } from '@/utils/request'
-import { articleListPort, articleSave, articleDel, articleInfo } from '@/api/news'
+import * as NewsApi from '@/api/news'
+import { getDateNow } from '@/utils/utils'
 
 import TEdtior from "@/components/TEdtior/index.vue";
+import uploadOneImg from "@/components/upload-one-img.vue";
 
 onMounted(() => {
   getArticleList()
@@ -119,6 +126,7 @@ const keyword = ref('')
 const newsFormData = ref({
   id: null,
   title: '',
+  gmtCreate: getDateNow(),
   content: '',
   pics: '',
 })
@@ -129,6 +137,13 @@ const newsFormRules = reactive({
       required: true,
       message: "请输入新闻标题",
       trigger: "blur",
+    },
+  ],
+  gmtCreate: [
+    {
+      required: true,
+      message: "请选择创建时间",
+      trigger: "change",
     },
   ],
   content: [
@@ -160,10 +175,11 @@ const delNews = (id) => {
 }
 
 // 确定删除
-const delNewsSure = () => {
-  articleDel(delId.value).then((res) => {
-    console.log("删除新闻");
-    console.log(res);
+const delNewsSure = async () => {
+  const { data: res } = await NewsApi.articleDel(delId.value)
+  console.log("删除新闻");
+  console.log(res);
+  if (res.code === 200) {
     ElMessage.success({
       message: "删除成功",
       showClose: true,
@@ -171,31 +187,32 @@ const delNewsSure = () => {
     });
     dialogDelNewsVisible.value = false;
     getArticleList();
-  })
-    .catch((err) => {
-      console.log(err);
-      ElMessage.error({
-        message: err.data.message,
-        showClose: true,
-        duration: 2000,
-      });
+  } else {
+    ElMessage.error({
+      message: res.data,
+      showClose: true,
+      duration: 2000,
     });
+  }
 }
 
 // 修改查看新闻
-const updateNews = (item) => {
+const updateNews = async (item) => {
   indexNow.value = item.id;
-  articleInfo(indexNow.value).then((res) => {
-    console.log("新闻详情", res);
-
+  const { data: res } = await NewsApi.articleInfo(indexNow.value)
+  console.log("新闻详情", res);
+  if (res.code === 200) {
     newsFormData.value = res.data;
     timer.value = new Date().getTime();
 
     newsSelect.value = 1;
-  })
-    .catch((err) => {
-      console.log(err);
+  } else {
+    ElMessage.error({
+      message: res.data,
+      showClose: true,
+      duration: 2000,
     });
+  }
 }
 
 // 新增新闻
@@ -205,6 +222,7 @@ const addNews = () => {
   newsFormData.value = {
     id: null,
     title: '',
+    gmtCreate: getDateNow(),
     content: '',
     pics: '',
   }
@@ -221,16 +239,13 @@ const submitNews = () => {
 
   newsFormData.value.content = editorCpnRef.value.getEditorHtml();
 
-  newsFormRef.value.validate((valid) => {
+  newsFormRef.value.validate(async (valid) => {
     if (!valid) return;
-    articleSave({
-      id: newsFormData.value.id,
-      title: newsFormData.value.title,
-      content: newsFormData.value.content,
-      pics: newsFormData.value.pics
-    }).then((res) => {
-      console.log("发布新闻");
-      console.log(res);
+
+    const { data: res } = await NewsApi.articleSave(newsFormData.value)
+    console.log("发布新闻");
+    console.log(res);
+    if (res.code === 200) {
       ElMessage.success({
         message: "新闻动态提交成功",
         showClose: true,
@@ -239,17 +254,15 @@ const submitNews = () => {
       newsSelect.value = 0;
       getArticleList();
       document.getElementById("news-container").scrollIntoView({ behavior: "smooth" });
-    })
-      .catch((err) => {
-        console.log("res");
-        ElMessage.error({
-          message: err.data.data,
-          showClose: true,
-          duration: 2000,
-        });
-        newsSelect.value = 0;
-        document.getElementById("news-container").scrollIntoView({ behavior: "smooth" });
+    } else {
+      ElMessage.error({
+        message: res.data,
+        showClose: true,
+        duration: 2000,
       });
+      newsSelect.value = 0;
+      document.getElementById("news-container").scrollIntoView({ behavior: "smooth" });
+    }
   })
 }
 
@@ -260,24 +273,28 @@ const imgBackChange = (val) => {
 };
 
 // 获取新闻列表
-const getArticleList = () => {
+const getArticleList = async () => {
   articleList.value = [];
-
-  articleListPort({
+  const { data: res } = await NewsApi.articleListPort({
     page: page.value,
     pageNum: pageNum.value,
     startTime: timeQuantum.value ? timeQuantum.value[0] : "",
     endTime: timeQuantum.value ? timeQuantum.value[1] : "",
     keyword: keyword.value,
-  }).then((res) => {
-    console.log("新闻列表");
-    console.log(res);
-    articleList.value = res.data.data;
-    total.value = res.data.total;
   })
-    .catch((err) => {
-      console.log(err);
+  console.log("新闻列表");
+  console.log(res);
+  if (res.code === 200) {
+    articleList.value = res.data.list;
+    total.value = res.data.total;
+  } else {
+    ElMessage.error({
+      message: res.data,
+      showClose: true,
+      duration: 2000,
     });
+  }
+
 
 }
 // 模糊搜索、查询
@@ -298,9 +315,6 @@ const handleCurrentChange = (val) => {
 
 <style lang="scss" scoped>
 .news-release-container {
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 10px;
 
   .button-style {
     width: 150px;

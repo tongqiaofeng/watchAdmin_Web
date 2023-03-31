@@ -4,86 +4,35 @@
       <!-- 新增寄卖 -->
       <div v-if="pageSel == 0" class="sales-ticket-main">
         <div class="sales-ticket-left">
-          <el-form
-            ref="addSalesTicketForm"
-            :model="addDataConsign"
-            :rules="addDataRules"
-            label-width="98px"
-          >
+          <el-form ref="addSalesTicketForm" :model="addDataConsign" :rules="addDataRules" label-width="98px">
             <el-form-item label="库存状态：" prop="state">
-              <el-select
-                size="large"
-                style="width: 600px"
-                v-model="addDataConsign.state"
-                placeholder="请选择"
-              >
-                <el-option
-                  v-for="item in stateList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                >
+              <el-select size="large" style="width: 600px" v-model="addDataConsign.state" placeholder="请选择">
+                <el-option v-for="item in stateList" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-select>
             </el-form-item>
             <el-form-item prop="stockSellTime" label="寄卖时间：">
-              <el-date-picker
-                size="large"
-                v-model="addDataConsign.stockSellTime"
-                type="date"
-                format="YYYY-MM-DD"
-                value-format="YYYY-MM-DD"
-                placeholder="请选择"
-              ></el-date-picker>
+              <el-date-picker size="large" v-model="addDataConsign.stockSellTime" type="date" format="YYYY-MM-DD"
+                value-format="YYYY-MM-DD" placeholder="请选择"></el-date-picker>
             </el-form-item>
             <el-form-item label="销售员：" prop="sellUserId">
-              <el-select
-                size="large"
-                style="width: 600px"
-                v-model="addDataConsign.sellUserId"
-                placeholder="请选择销售员"
-              >
-                <el-option
-                  v-for="item in sellerList"
-                  :key="item.id"
-                  :label="item.nick"
-                  :value="item.id"
-                >
+              <el-select size="large" style="width: 600px" v-model="addDataConsign.sellUserId" placeholder="请选择销售员">
+                <el-option v-for="item in sellerList" :key="item.id" :label="item.nick" :value="item.id">
                 </el-option>
               </el-select>
             </el-form-item>
 
             <el-form-item label="接收公司：" prop="receiveCompanyId">
-              <el-select
-                style="width: 600px"
-                size="large"
-                value-key="id"
-                v-model="addDataConsign.receiveCompanyMsg"
-                @change="receiveCompanyChange"
-              >
-                <el-option
-                  v-for="item in receiveCompanyList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item"
-                >
+              <el-select style="width: 600px" size="large" value-key="id" v-model="addDataConsign.receiveCompanyMsg"
+                @change="receiveCompanyChange">
+                <el-option v-for="item in receiveCompanyList" :key="item.id" :label="item.name" :value="item">
                 </el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="接收仓库：" prop="receiveWarehouseId">
-              <el-select
-                style="width: 600px"
-                size="large"
-                value-key="id"
-                v-model="addDataConsign.receiveWarehouse"
-                @change="warehouseChange"
-              >
-                <el-option
-                  v-for="item in receiveWarehouseList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item"
-                >
+              <el-select style="width: 600px" size="large" value-key="id" v-model="addDataConsign.receiveWarehouse"
+                @change="warehouseChange">
+                <el-option v-for="item in receiveWarehouseList" :key="item.id" :label="item.name" :value="item">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -97,16 +46,8 @@
             </el-form-item>
 
             <el-form-item label="寄卖商品：" prop="watchList">
-              <el-collapse
-                accordion
-                style="width: 100%"
-                v-show="addDataConsign.watchList.length > 0"
-              >
-                <el-collapse-item
-                  v-for="(item, index) in addDataConsign.watchList"
-                  :key="item.id"
-                  :name="index"
-                >
+              <el-collapse accordion style="width: 100%" v-show="addDataConsign.watchList.length > 0">
+                <el-collapse-item v-for="(item, index) in addDataConsign.watchList" :key="item.id" :name="index">
                   <template #title>
                     <div style="color: #258b7d; font-weight: 700">
                       {{ item.brand + " - " + item.model }}
@@ -116,129 +57,63 @@
                     <el-form label-width="70px">
                       <el-form-item label="寄卖金额">
                         <div style="display: flex">
-                          <el-input
-                            size="large"
-                            type="text"
-                            placeholder="请输入"
-                            v-model="item.sellMoney"
-                            clearable
-                          >
+                          <el-input size="large" type="text" placeholder="请输入" v-model="item.sellMoney" clearable>
                           </el-input>
                           <el-select size="large" v-model="item.sellCurrency">
-                            <el-option
-                              v-for="(item, index) in currencyList"
-                              :key="index"
-                              :label="item"
-                              :value="item"
-                            >
+                            <el-option v-for="(item, index) in currencyList" :key="index" :label="item" :value="item">
                             </el-option>
                           </el-select>
                         </div>
                       </el-form-item>
                       <el-form-item label="销售备注">
-                        <el-input
-                          size="large"
-                          type="textarea"
-                          placeholder="请输入"
-                          v-model="item.sellNote"
-                          clearable
-                        ></el-input>
+                        <el-input size="large" type="textarea" placeholder="请输入" v-model="item.sellNote"
+                          clearable></el-input>
                       </el-form-item>
                     </el-form>
                   </div>
                 </el-collapse-item>
               </el-collapse>
-              <span
-                v-show="addDataConsign.watchList.length == 0"
-                style="font-size: 14px"
-                >右侧选择寄卖商品</span
-              >
+              <span v-show="addDataConsign.watchList.length == 0" style="font-size: 14px">右侧选择寄卖商品</span>
             </el-form-item>
           </el-form>
 
           <div style="margin: 60px 40px 20px 0; text-align: right">
-            <el-button
-              type="primary"
-              size="large"
-              style="width: 100px"
-              v-preventClick
-              @click="submitSales"
-              >提 交</el-button
-            >
+            <el-button type="primary" size="large" style="width: 100px" v-preventClick @click="submitSales">提
+              交</el-button>
           </div>
         </div>
         <div class="sales-ticket-right">
           <el-form inline>
             <el-form-item label="库存地：">
-              <el-select
-                clearable
-                size="large"
-                v-model="warehouseId"
-                placeholder="请选择"
-                @change="radioChange"
-                style="margin-bottom: 10px; margin-right: 10px"
-              >
-                <el-option
-                  v-for="item in warehouseList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
-                >
+              <el-select clearable size="large" v-model="warehouseId" placeholder="请选择" @change="radioChange"
+                style="margin-bottom: 10px; margin-right: 10px">
+                <el-option v-for="item in warehouseList" :key="item.id" :label="item.name" :value="item.id">
                 </el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="关键字：">
-              <el-input
-                size="large"
-                style="width: 400px"
-                v-model="searchKey"
-                clearable
-                placeholder="可输入手表品牌、型号、机芯号、货号进行查找"
-                @focus="radioChange"
-              ></el-input>
+              <el-input size="large" style="width: 400px" v-model="searchKey" clearable
+                placeholder="可输入手表品牌、型号、机芯号、货号进行查找" @focus="radioChange"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button size="large" type="primary" @click="getNotSoldList"
-                >查询</el-button
-              >
+              <el-button size="large" type="primary" @click="getNotSoldList">查询</el-button>
             </el-form-item>
           </el-form>
-          <el-table
-            style="width: 100%"
-            ref="multipleTable"
-            :data="notSoldBagList"
-            :row-key="getRowKeys"
-            border
-          >
+          <el-table style="width: 100%" ref="multipleTable" :data="notSoldBagList" :row-key="getRowKeys" border>
             <el-table-column align="center" width="50px">
               <template #default="scope">
                 <div>
-                  <input
-                    class="selBtn"
-                    type="checkbox"
-                    v-model="hobby"
-                    :value="scope.row"
-                    @change="checkedChange($event, scope.row)"
-                  />
+                  <input class="selBtn" type="checkbox" v-model="hobby" :value="scope.row"
+                    @change="checkedChange($event, scope.row)" />
                 </div>
               </template>
             </el-table-column>
-            <el-table-column
-              width="120px"
-              align="center"
-              prop="pics"
-              label="图片"
-            >
+            <el-table-column width="120px" align="center" prop="pics" label="图片">
               <template #default="scope">
                 <div>
-                  <el-image
-                    preview-teleported
-                    style="width: 90px; height: 90px; z-index: 9999"
-                    :src="
-                      scope.row.pics ? base_request_url + scope.row.pics : ''
-                    "
-                    :preview-src-list="[base_request_url + scope.row.pics]"
-                  />
+                  <el-image preview-teleported style="width: 90px; height: 90px; z-index: 9999" :src="
+                    scope.row.pics ? base_request_url + scope.row.pics : ''
+                  " :preview-src-list="[base_request_url + scope.row.pics]" />
                 </div>
               </template>
             </el-table-column>
@@ -250,16 +125,8 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column
-              prop="buyWatchSn"
-              align="center"
-              label="机芯号"
-            ></el-table-column>
-            <el-table-column
-              prop="buyWatchPrice"
-              align="center"
-              label="采购价格"
-            >
+            <el-table-column prop="buyWatchSn" align="center" label="机芯号"></el-table-column>
+            <el-table-column prop="buyWatchPrice" align="center" label="采购价格">
               <template #default="scope">
                 <div>
                   <p>
@@ -282,13 +149,8 @@
           </el-table-column> -->
           </el-table>
           <div style="margin-top: 15px; text-align: right">
-            <el-pagination
-              @current-change="handleCurrentChange"
-              :current-page="page"
-              :page-size="5"
-              layout="total, prev, pager, next, jumper"
-              :total="total"
-            >
+            <el-pagination @current-change="handleCurrentChange" :current-page="page" :page-size="5"
+              layout="total, prev, pager, next, jumper" :total="total">
             </el-pagination>
           </div>
         </div>
@@ -510,13 +372,7 @@ const getCountryCurrency = async () => {
   console.log("国家列表", res);
 
   let countryData = res.data;
-  let list = [];
-  for (let item of countryData) {
-    if (list.indexOf(item.enCurrency) === -1) {
-      list.push(item.enCurrency);
-    }
-  }
-  currencyList.value = list;
+  currencyList.value = [...new Set(countryData.map(v => v.enCurrency))];
 };
 getCountryCurrency();
 

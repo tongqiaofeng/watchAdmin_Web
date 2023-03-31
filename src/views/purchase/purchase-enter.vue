@@ -3,135 +3,54 @@
     <div class="purchase-enter-container">
       <!-- 采购录入 -->
       <div v-show="purchasePage == 0">
-        <el-form
-          label-width="100px"
-          ref="purchaseEnterRef"
-          :model="watchMsgData"
-          :rules="watchMsgRules"
-        >
+        <el-form label-width="100px" ref="purchaseEnterRef" :model="watchMsgData" :rules="watchMsgRules">
           <el-form-item label="采购日期：" prop="buyDate">
-            <el-date-picker
-              v-model="watchMsgData.buyDate"
-              type="date"
-              placeholder="请选择"
-              format="YYYY-MM-DD"
-              value-format="YYYY-MM-DD"
-              size="large"
-            />
+            <el-date-picker v-model="watchMsgData.buyDate" type="date" placeholder="请选择" format="YYYY-MM-DD"
+              value-format="YYYY-MM-DD" size="large" />
           </el-form-item>
           <el-form-item label="采购员：" prop="buyUserId">
-            <el-select
-              style="width: 400px"
-              v-model="watchMsgData.buyUserId"
-              class="m-2"
-              placeholder="请选择"
-              size="large"
-              @change="buyUserChange"
-            >
-              <el-option
-                v-for="item in buyerList"
-                :key="item.id"
-                :label="item.nick"
-                :value="item.id"
-              />
+            <el-select style="width: 400px" v-model="watchMsgData.buyUserId" class="m-2" placeholder="请选择" size="large"
+              @change="buyUserChange">
+              <el-option v-for="item in buyerList" :key="item.id" :label="item.nick" :value="item.id" />
             </el-select>
           </el-form-item>
           <el-form-item label="采购单类型：" prop="buyType">
-            <el-select
-              style="width: 400px"
-              v-model="watchMsgData.buyType"
-              class="m-2"
-              placeholder="请选择"
-              size="large"
-              @change="typeChange"
-            >
+            <el-select style="width: 400px" v-model="watchMsgData.buyType" class="m-2" placeholder="请选择" size="large"
+              @change="typeChange">
               <el-option label="代理商采购" value="0" />
               <el-option label="贸易商采购" value="1" />
             </el-select>
           </el-form-item>
-          <el-form-item
-            label="采购店铺："
-            prop="buySourceId"
-            v-if="watchMsgData.buyType == 0"
-          >
-            <el-autocomplete
-              size="large"
-              style="width: 400px"
-              :fit-input-width="true"
-              clearable
-              v-model="storeKeyword"
-              :fetch-suggestions="queryStoreSearchAsync"
-              :trigger-on-focus="false"
-              placeholder="可输入店铺名称、地址、国家等信息进行查询"
-              @select="handleStoreSelect"
-            />
+          <el-form-item label="采购店铺：" prop="buySourceId" v-if="watchMsgData.buyType == 0">
+            <el-autocomplete size="large" style="width: 400px" :fit-input-width="true" clearable v-model="storeKeyword"
+              :fetch-suggestions="queryStoreSearchAsync" :trigger-on-focus="false" placeholder="可输入店铺名称、地址、国家等信息进行查询"
+              @select="handleStoreSelect" />
           </el-form-item>
-          <el-form-item
-            label="贸易商："
-            prop="buySourceId"
-            v-if="watchMsgData.buyType == 1"
-          >
-            <el-select
-              style="width: 400px"
-              size="large"
-              v-model="watchMsgData.peerMsg"
-              filterable
-              clearable
-              placeholder="可输入同行名称进行搜索"
-              value-key="id"
-              @change="peerChange"
-            >
-              <el-option
-                v-for="item in peerList"
-                :key="item.id"
-                :label="item.name"
-                :value="item"
-              />
+          <el-form-item label="贸易商：" prop="buySourceId" v-if="watchMsgData.buyType == 1">
+            <el-select style="width: 400px" size="large" v-model="watchMsgData.peerMsg" filterable clearable
+              placeholder="可输入同行名称进行搜索" value-key="id" @change="peerChange">
+              <el-option v-for="item in peerList" :key="item.id" :label="item.name" :value="item" />
             </el-select>
           </el-form-item>
         </el-form>
         <div style="text-align: right">
-          <el-button
-            type="primary"
-            size="large"
-            v-preventClick
-            @click="addWatch"
-            >添加手表</el-button
-          >
+          <el-button type="primary" size="large" v-preventClick @click="addWatch">添加手表</el-button>
         </div>
-        <div
-          style="position: fixed; right: 40px; bottom: 100px; z-index: 999999"
-        >
-          <el-button
-            style="width: 150px"
-            type="primary"
-            size="large"
-            v-preventClick
-            @click="submitBuyOrder"
-            >新增采购单</el-button
-          >
+        <div style="position: fixed; right: 40px; bottom: 100px; z-index: 999999">
+          <el-button style="width: 150px" type="primary" size="large" v-preventClick
+            @click="submitBuyOrder">新增采购单</el-button>
         </div>
         <div style="margin-top: 40px">
-          <el-table
-            :data="watchMsgData.watchList"
-            border
-            stripe
-            empty-text="暂无数据"
-          >
+          <el-table :data="watchMsgData.watchList" border stripe empty-text="暂无数据">
             <el-table-column align="center" label="图片">
               <template #default="scope">
-                <el-image
-                  preview-teleported
-                  style="width: 90px; height: 90px; z-index: 9999"
-                  :src="
-                    scope.row.myPic
-                      ? base_request_url + '/file/' + scope.row.myPic
-                      : ''
-                  "
-                  :preview-src-list="[
-                    base_request_url + '/file/' + scope.row.myPic,
-                  ]"
-                />
+                <el-image preview-teleported style="width: 90px; height: 90px; z-index: 9999" :src="
+                  scope.row.myPic
+                    ? base_request_url + '/file/' + scope.row.myPic
+                    : ''
+                " :preview-src-list="[
+  base_request_url + '/file/' + scope.row.myPic,
+]" />
               </template>
             </el-table-column>
             <el-table-column prop="myBrand" align="center" label="品牌型号">
@@ -142,11 +61,7 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column
-              prop="buyWatchPrice"
-              align="center"
-              label="采购价格"
-            >
+            <el-table-column prop="buyWatchPrice" align="center" label="采购外币金额">
               <template #default="scope">
                 <div>
                   <p>
@@ -159,20 +74,26 @@
                 </div>
               </template>
             </el-table-column>
+            <el-table-column prop="buySettlePrice" align="center" :label="'采购' + currencyGlobal + '金额'">
+              <template #default="scope">
+                <div>
+                  <p>
+                    {{
+                      formatNumberRgx(scope.row.buySettlePrice) +
+                      " " +
+                      currencyGlobal
+                    }}
+                  </p>
+                </div>
+              </template>
+            </el-table-column>
             <el-table-column label="操作" align="center" width="250">
               <template #default="scope">
                 <div class="btn-row">
-                  <div
-                    class="btn"
-                    @click="updateWatch(scope.row, scope.$index)"
-                  >
+                  <div class="btn" @click="updateWatch(scope.row, scope.$index)">
                     <span>编辑</span>
                   </div>
-                  <div
-                    class="btn"
-                    style="margin: 0"
-                    @click="delWatch(scope.$index)"
-                  >
+                  <div class="btn" style="margin: 0" @click="delWatch(scope.$index)">
                     <span>删除</span>
                   </div>
                 </div>
@@ -187,52 +108,22 @@
           <span class="font">返回</span>
         </div>
         <div style="margin-top: 30px">
-          <el-form
-            label-width="125px"
-            ref="watchFilterRef"
-            :model="watchStateMsgData"
-            :rules="watchStateMsgRules"
-          >
+          <el-form label-width="125px" ref="watchFilterRef" :model="watchStateMsgData" :rules="watchStateMsgRules">
             <el-form-item label="手表型号:" prop="watchModel">
-              <el-input
-                size="large"
-                clearable
-                v-model="watchStateMsgData.watchModel"
-                style="width: 600px"
-                placeholder="可输入手表品牌、系列、型号进行搜索"
-                :trigger-on-focus="false"
-              />
-              <el-button size="large" type="primary" @click="fetchSuggestions"
-                >搜索手表</el-button
-              >
+              <el-input size="large" clearable v-model="watchStateMsgData.watchModel" style="width: 600px"
+                placeholder="可输入手表品牌、系列、型号进行搜索" :trigger-on-focus="false" />
+              <el-button size="large" type="primary" @click="fetchSuggestions">搜索手表</el-button>
             </el-form-item>
             <el-form-item label="状态：" prop="state">
-              <el-select
-                style="width: 600px"
-                size="large"
-                v-model="watchStateMsgData.state"
-                @change="watchStateChange"
-              >
-                <el-option
-                  v-for="item in stateList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                >
+              <el-select style="width: 600px" size="large" v-model="watchStateMsgData.state" @change="watchStateChange">
+                <el-option v-for="item in stateList" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-select>
             </el-form-item>
           </el-form>
           <div v-if="filterWatchList.length > 0">
-            <el-table
-              ref="multipleTable"
-              :data="filterWatchList"
-              highlight-current-row
-              height="40vh"
-              border
-              @current-change="watchSelect"
-              empty-text="暂无数据"
-            >
+            <el-table ref="multipleTable" :data="filterWatchList" highlight-current-row height="40vh" border
+              @current-change="watchSelect" empty-text="暂无数据">
               <el-table-column align="center" prop="brand" label="品牌">
               </el-table-column>
               <el-table-column align="center" prop="model" label="型号">
@@ -240,10 +131,8 @@
               <el-table-column align="center" prop="pic" label="图片">
                 <template #default="scope">
                   <div>
-                    <img
-                      :src="base_request_url + '/file/' + scope.row.pic"
-                      style="width: 90px; height: 90px; object-fit: contain"
-                    />
+                    <img :src="base_request_url + '/file/' + scope.row.pic"
+                      style="width: 90px; height: 90px; object-fit: contain" />
                   </div>
                 </template>
               </el-table-column>
@@ -254,109 +143,57 @@
             <el-tab-pane label="采购手表" name="purchase">
               <el-tabs v-model="activeName" type="border-card">
                 <el-tab-pane label="手表信息" name="first">
-                  <el-form
-                    ref="watchRef"
-                    label-width="110px"
-                    :model="watchStateMsgData"
-                    :rules="watchStateMsgRules"
-                  >
-                    <el-form-item label="采购价格:" prop="buyWatchPrice">
+                  <el-form ref="watchRef" label-width="110px" :model="watchStateMsgData" :rules="watchStateMsgRules">
+                    <el-form-item label="采购外币金额:" prop="buyWatchPrice">
                       <div style="display: flex">
-                        <el-input-number
-                          style="width: 600px"
-                          :min="0"
-                          size="large"
-                          clearable
-                          placeholder="请输入采购价格"
-                          :controls="false"
-                          v-model="watchStateMsgData.buyWatchPrice"
-                        />
-                        <el-select
-                          size="large"
-                          v-model="watchMsgData.buyWatchCurrency"
-                          @change="curChange"
-                        >
-                          <el-option
-                            v-for="(item, index) in currencyList"
-                            :key="index"
-                            :label="item"
-                            :value="item"
-                          >
+                        <el-input-number style="width: 600px" :min="0" size="large" clearable placeholder="请输入金额"
+                          :controls="false" v-model="watchStateMsgData.buyWatchPrice" />
+                        <el-select size="large" v-model="watchMsgData.buyWatchCurrency" @change="curChange">
+                          <el-option v-for="(item, index) in currencyList" :key="index" :label="item" :value="item">
                           </el-option>
                         </el-select>
                       </div>
                     </el-form-item>
+
+                    <el-form-item :label="'采购' + currencyGlobal + '金额:'" prop="buySettlePrice">
+                      <el-input-number style="width: 600px" :min="0" size="large" clearable placeholder="请输入金额"
+                        :controls="false" v-model="watchStateMsgData.buySettlePrice" />
+                    </el-form-item>
+
                     <el-form-item label="机芯号:" prop="buyWatchSn">
-                      <el-input
-                        style="width: 600px"
-                        size="large"
-                        clearable
-                        placeholder="请输入机芯号"
-                        v-model="watchStateMsgData.buyWatchSn"
-                      ></el-input>
+                      <el-input style="width: 600px" size="large" clearable placeholder="请输入机芯号"
+                        v-model="watchStateMsgData.buyWatchSn"></el-input>
                     </el-form-item>
                     <el-form-item label="保卡日期:" prop="buyWatchCard">
-                      <el-date-picker
-                        v-model="watchStateMsgData.buyWatchCard"
-                        type="date"
-                        placeholder="请选择保卡日期"
-                        format="YYYY-MM-DD"
-                        value-format="YYYY-MM-DD"
-                        size="large"
-                      />
+                      <el-date-picker v-model="watchStateMsgData.buyWatchCard" type="date" placeholder="请选择保卡日期"
+                        format="YYYY-MM-DD" value-format="YYYY-MM-DD" size="large" />
                     </el-form-item>
                     <el-form-item label="配件:" prop="buyWatchParts">
-                      <el-checkbox-group
-                        v-model="watchStateMsgData.buyWatchParts"
-                      >
-                        <el-checkbox
-                          v-for="accessory in watchPartsList"
-                          :label="accessory"
-                          :key="accessory"
-                        />
+                      <el-checkbox-group v-model="watchStateMsgData.buyWatchParts">
+                        <el-checkbox v-for="accessory in watchPartsList" :label="accessory" :key="accessory" />
                       </el-checkbox-group>
                     </el-form-item>
                     <el-form-item label="额外表带:" prop="buyWatchBand">
-                      <el-input-number
-                        style="width: 600px"
-                        :min="0"
-                        clearable
-                        size="large"
-                        :precision="0"
-                        :controls="false"
-                        placeholder="请输入额外表带数"
-                        v-model="watchStateMsgData.buyWatchBand"
-                      >
+                      <el-input-number style="width: 600px" :min="0" clearable size="large" :precision="0"
+                        :controls="false" placeholder="请输入额外表带数" v-model="watchStateMsgData.buyWatchBand">
                       </el-input-number>
                       <span style="color: #606266">条</span>
                     </el-form-item>
                   </el-form>
                 </el-tab-pane>
                 <el-tab-pane label="付 款" name="second">
-                  <el-form
-                    label-width="110px"
-                    ref="watchBuyTaxRef"
-                    :model="watchStateMsgData"
-                  >
+                  <el-form label-width="110px" ref="watchBuyTaxRef" :model="watchStateMsgData">
                     <el-form-item label="是否付款完成：" prop="buyPayState">
-                      <el-switch
-                        style="
-                          --el-switch-on-color: #0c7063;
-                          --el-switch-off-color: #ff4949;
-                        "
-                        active-value="1"
-                        inactive-value="0"
-                        v-model="watchStateMsgData.buyPayState"
-                      />
+                      <el-switch style="
+                                                      --el-switch-on-color: #0c7063;
+                                                      --el-switch-off-color: #ff4949;
+                                                    " active-value="1" inactive-value="0"
+                        v-model="watchStateMsgData.buyPayState" />
                     </el-form-item>
                   </el-form>
                 </el-tab-pane>
                 <el-tab-pane label="退 税" name="third">
-                  <el-form
-                    label-width="110px"
-                    ref="watchBuyTaxRef"
-                    :model="watchStateMsgData"
-                  >
+                  <el-form label-width="110px" ref="watchBuyTaxRef" :model="watchStateMsgData">
                     <el-form-item label="退税状态：" prop="buyTaxState">
                       <el-radio-group v-model="watchStateMsgData.buyTaxState">
                         <el-radio label="-1" size="large">无退税</el-radio>
@@ -365,73 +202,42 @@
                       </el-radio-group>
                     </el-form-item>
                     <el-form-item label="退税方式：" prop="buyTaxType">
-                      <el-select
-                        style="width: 600px"
-                        size="large"
-                        v-model="watchStateMsgData.buyTaxType"
-                      >
+                      <el-select style="width: 600px" size="large" v-model="watchStateMsgData.buyTaxType">
                         <el-option value="1" label="现金"></el-option>
                         <el-option value="0" label="退到银行卡"></el-option>
                       </el-select>
                     </el-form-item>
 
                     <el-form-item label="公司名称：" prop="buyTaxCompany">
-                      <el-input
-                        style="width: 600px"
-                        size="large"
-                        v-model="watchStateMsgData.buyTaxCompany"
-                        placeholder="请输入退税公司名称"
-                      ></el-input>
+                      <el-input style="width: 600px" size="large" v-model="watchStateMsgData.buyTaxCompany"
+                        placeholder="请输入退税公司名称"></el-input>
                     </el-form-item>
                     <el-form-item label="负责人：" prop="buyTaxPerson">
-                      <el-input
-                        style="width: 600px"
-                        size="large"
-                        v-model="watchStateMsgData.buyTaxPerson"
-                        placeholder="请输入退税负责人"
-                      ></el-input>
+                      <el-input style="width: 600px" size="large" v-model="watchStateMsgData.buyTaxPerson"
+                        placeholder="请输入退税负责人"></el-input>
                     </el-form-item>
                     <el-form-item label="应退金额：" prop="buyTaxMoneyEx">
-                      <el-input-number
-                        style="width: 600px"
-                        :min="0"
-                        size="large"
-                        clearable
-                        placeholder="请输入应退金额"
-                        :controls="false"
-                        v-model="watchStateMsgData.buyTaxMoneyEx"
-                      >
+                      <el-input-number style="width: 600px" :min="0" size="large" clearable placeholder="请输入应退金额"
+                        :controls="false" v-model="watchStateMsgData.buyTaxMoneyEx">
                       </el-input-number>
                       <span style="color: #606266">{{
                         watchStateMsgData.buyTaxCurrency
                       }}</span>
                     </el-form-item>
                     <el-form-item label="是否返店退税：" prop="buyTaxBackStore">
-                      <el-switch
-                        v-model="watchStateMsgData.buyTaxBackStore"
-                        style="
-                          --el-switch-on-color: #0c7063;
-                          --el-switch-off-color: #ff4949;
-                        "
-                        active-value="1"
-                        inactive-value="0"
-                      />
+                      <el-switch v-model="watchStateMsgData.buyTaxBackStore" style="
+                                                      --el-switch-on-color: #0c7063;
+                                                      --el-switch-off-color: #ff4949;
+                                                    " active-value="1" inactive-value="0" />
                     </el-form-item>
                     <el-form-item label="税单图片：" prop="buyTaxPic">
-                      <UploadImg
-                        :imgUrl="watchStateMsgData.buyTaxPic"
-                        :imgType="2"
-                        @imgChange="buyTaxImgUrlChange"
-                      ></UploadImg>
+                      <UploadImg :imgUrl="watchStateMsgData.buyTaxPic" :imgType="2" @imgChange="buyTaxImgUrlChange">
+                      </UploadImg>
                     </el-form-item>
                   </el-form>
                 </el-tab-pane>
                 <el-tab-pane label="佣 金" name="fourth">
-                  <el-form
-                    ref="buyCommRef"
-                    label-width="110px"
-                    :model="watchStateMsgData"
-                  >
+                  <el-form ref="buyCommRef" label-width="110px" :model="watchStateMsgData">
                     <el-form-item label="佣金状态：" prop="buyCommState">
                       <el-radio-group v-model="watchStateMsgData.buyCommState">
                         <el-radio label="-1" size="large">无佣金</el-radio>
@@ -441,15 +247,8 @@
                     </el-form-item>
 
                     <el-form-item label="应收佣金：" prop="buyCommMoney">
-                      <el-input-number
-                        style="width: 600px"
-                        :min="0"
-                        size="large"
-                        clearable
-                        placeholder="请输入应收佣金"
-                        :controls="false"
-                        v-model="watchStateMsgData.buyCommMoney"
-                      >
+                      <el-input-number style="width: 600px" :min="0" size="large" clearable placeholder="请输入应收佣金"
+                        :controls="false" v-model="watchStateMsgData.buyCommMoney">
                       </el-input-number>
                       <span style="color: #606266">{{
                         watchMsgData.buyWatchCurrency
@@ -460,75 +259,29 @@
               </el-tabs>
             </el-tab-pane>
             <el-tab-pane label="运输信息" name="transport">
-              <el-form
-                ref="purchaseRef"
-                label-width="125px"
-                :model="watchStateMsgData"
-                :rules="watchStateMsgRules"
-              >
+              <el-form ref="purchaseRef" label-width="125px" :model="watchStateMsgData" :rules="watchStateMsgRules">
                 <el-form-item label="发货时间：" prop="stockSendTime">
-                  <el-date-picker
-                    v-model="watchStateMsgData.stockSendTime"
-                    type="date"
-                    placeholder="请选择发货时间"
-                    format="YYYY-MM-DD"
-                    value-format="YYYY-MM-DD"
-                    size="large"
-                  />
+                  <el-date-picker v-model="watchStateMsgData.stockSendTime" type="date" placeholder="请选择发货时间"
+                    format="YYYY-MM-DD" value-format="YYYY-MM-DD" size="large" />
                 </el-form-item>
-                <el-form-item
-                  label="到达仓库："
-                  prop="warehouseId"
-                  v-if="watchStateMsgData.state == 1"
-                >
-                  <el-select
-                    style="width: 600px"
-                    size="large"
-                    value-key="id"
-                    v-model="watchStateMsgData.warehouse"
-                    @change="warehouseChange"
-                  >
-                    <el-option
-                      v-for="item in warehouseList"
-                      :key="item.id"
-                      :label="item.name"
-                      :value="item"
-                    >
+                <el-form-item label="到达仓库：" prop="warehouseId" v-if="watchStateMsgData.state == 1">
+                  <el-select style="width: 600px" size="large" value-key="id" v-model="watchStateMsgData.warehouse"
+                    @change="warehouseChange">
+                    <el-option v-for="item in warehouseList" :key="item.id" :label="item.name" :value="item">
                     </el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item label="预计到达时间：" prop="stockArriveTime">
-                  <el-date-picker
-                    v-model="watchStateMsgData.stockArriveTime"
-                    type="date"
-                    placeholder="请选择预计到达时间"
-                    format="YYYY-MM-DD"
-                    value-format="YYYY-MM-DD"
-                    size="large"
-                  />
+                  <el-date-picker v-model="watchStateMsgData.stockArriveTime" type="date" placeholder="请选择预计到达时间"
+                    format="YYYY-MM-DD" value-format="YYYY-MM-DD" size="large" />
                 </el-form-item>
 
                 <el-form-item label="运费：" prop="logMoneyEx">
                   <div style="display: flex">
-                    <el-input-number
-                      style="width: 600px"
-                      :min="0"
-                      size="large"
-                      clearable
-                      placeholder="请输入运费"
-                      :controls="false"
-                      v-model="watchStateMsgData.logMoneyEx"
-                    />
-                    <el-select
-                      size="large"
-                      v-model="watchStateMsgData.logCurrency"
-                    >
-                      <el-option
-                        v-for="(item, index) in currencyList"
-                        :key="index"
-                        :label="item"
-                        :value="item"
-                      >
+                    <el-input-number style="width: 600px" :min="0" size="large" clearable placeholder="请输入运费"
+                      :controls="false" v-model="watchStateMsgData.logMoneyEx" />
+                    <el-select size="large" v-model="watchStateMsgData.logCurrency">
+                      <el-option v-for="(item, index) in currencyList" :key="index" :label="item" :value="item">
                       </el-option>
                     </el-select>
                   </div>
@@ -536,36 +289,15 @@
               </el-form>
             </el-tab-pane>
             <el-tab-pane label="库存信息" name="stock">
-              <el-form
-                ref="warehouseRef"
-                label-width="110px"
-                :model="watchStateMsgData"
-                :rules="watchStateMsgRules"
-              >
+              <el-form ref="warehouseRef" label-width="110px" :model="watchStateMsgData" :rules="watchStateMsgRules">
                 <el-form-item label="入库时间：" prop="stockInTime">
-                  <el-date-picker
-                    v-model="watchStateMsgData.stockInTime"
-                    type="date"
-                    placeholder="请选择入库时间"
-                    format="YYYY-MM-DD"
-                    value-format="YYYY-MM-DD"
-                    size="large"
-                  />
+                  <el-date-picker v-model="watchStateMsgData.stockInTime" type="date" placeholder="请选择入库时间"
+                    format="YYYY-MM-DD" value-format="YYYY-MM-DD" size="large" />
                 </el-form-item>
                 <el-form-item label="库存地：" prop="warehouseId">
-                  <el-select
-                    style="width: 600px"
-                    size="large"
-                    value-key="id"
-                    v-model="watchStateMsgData.warehouse"
-                    @change="warehouseChange"
-                  >
-                    <el-option
-                      v-for="item in warehouseList"
-                      :key="item.id"
-                      :label="item.name"
-                      :value="item"
-                    >
+                  <el-select style="width: 600px" size="large" value-key="id" v-model="watchStateMsgData.warehouse"
+                    @change="warehouseChange">
+                    <el-option v-for="item in warehouseList" :key="item.id" :label="item.name" :value="item">
                     </el-option>
                   </el-select>
                 </el-form-item>
@@ -580,13 +312,8 @@
                   </el-checkbox-group>
                 </el-form-item>
                 <el-form-item label="货架号:" prop="stockShelfNoA">
-                  <el-input
-                    style="width: 600px"
-                    size="large"
-                    clearable
-                    placeholder="请输入货架号"
-                    v-model="watchStateMsgData.stockShelfNoA"
-                  ></el-input>
+                  <el-input style="width: 600px" size="large" clearable placeholder="请输入货架号"
+                    v-model="watchStateMsgData.stockShelfNoA"></el-input>
                 </el-form-item>
                 <el-form-item prop="stockInPic">
                   <template #label>
@@ -597,189 +324,75 @@
 
                   <template #default>
                     <div>
-                      <UploadImg
-                        :imgUrl="watchStateMsgData.stockInPic"
-                        :imgType="2"
-                        @imgChange="buyStockImgUrlChange"
-                      ></UploadImg>
+                      <UploadImg :imgUrl="watchStateMsgData.stockInPic" :imgType="2" @imgChange="buyStockImgUrlChange">
+                      </UploadImg>
                     </div>
                   </template>
                 </el-form-item>
               </el-form>
             </el-tab-pane>
-            <el-tab-pane
-              :label="watchStateMsgData.state == 5 ? '寄卖信息' : '出售信息'"
-              name="sale"
-            >
-              <el-form
-                ref="saleRef"
-                label-width="110px"
-                :model="watchStateMsgData"
-                :rules="watchStateMsgRules"
-              >
-                <el-form-item
-                  :label="
-                    watchStateMsgData.state == 5 ? '寄卖时间：' : '出售时间：'
-                  "
-                  prop="stockSellTime"
-                >
-                  <el-date-picker
-                    v-model="watchStateMsgData.stockSellTime"
-                    type="date"
-                    placeholder="请选择时间"
-                    format="YYYY-MM-DD"
-                    value-format="YYYY-MM-DD"
-                    size="large"
-                  />
+            <el-tab-pane :label="watchStateMsgData.state == 5 ? '寄卖信息' : '出售信息'" name="sale">
+              <el-form ref="saleRef" label-width="110px" :model="watchStateMsgData" :rules="watchStateMsgRules">
+                <el-form-item :label="
+                  watchStateMsgData.state == 5 ? '寄卖时间：' : '出售时间：'
+                " prop="stockSellTime">
+                  <el-date-picker v-model="watchStateMsgData.stockSellTime" type="date" placeholder="请选择时间"
+                    format="YYYY-MM-DD" value-format="YYYY-MM-DD" size="large" />
                 </el-form-item>
 
-                <el-form-item
-                  :label="
-                    watchStateMsgData.state == 5 ? '寄卖金额：' : '出售金额：'
-                  "
-                  prop="sellMoney"
-                >
+                <el-form-item :label="
+                  watchStateMsgData.state == 5 ? '寄卖金额：' : '出售金额：'
+                " prop="sellMoney">
                   <div style="display: flex">
-                    <el-input-number
-                      style="width: 600px"
-                      :min="0"
-                      size="large"
-                      clearable
-                      placeholder="请输入金额"
-                      :controls="false"
-                      v-model="watchStateMsgData.sellMoney"
-                    />
-                    <el-select
-                      size="large"
-                      v-model="watchStateMsgData.sellCurrency"
-                    >
-                      <el-option
-                        v-for="(item, index) in currencyList"
-                        :key="index"
-                        :label="item"
-                        :value="item"
-                      >
+                    <el-input-number style="width: 600px" :min="0" size="large" clearable placeholder="请输入金额"
+                      :controls="false" v-model="watchStateMsgData.sellMoney" />
+                    <el-select size="large" v-model="watchStateMsgData.sellCurrency">
+                      <el-option v-for="(item, index) in currencyList" :key="index" :label="item" :value="item">
                       </el-option>
                     </el-select>
                   </div>
                 </el-form-item>
 
                 <el-form-item label="销售员：" prop="sellUserId">
-                  <el-select
-                    style="width: 600px"
-                    v-model="watchStateMsgData.sellUserId"
-                    class="m-2"
-                    placeholder="请选择"
-                    size="large"
-                    @change="sellUserChange"
-                  >
-                    <el-option
-                      v-for="item in sellerList"
-                      :key="item.id"
-                      :label="item.nick"
-                      :value="item.id"
-                    />
+                  <el-select style="width: 600px" v-model="watchStateMsgData.sellUserId" class="m-2" placeholder="请选择"
+                    size="large" @change="sellUserChange">
+                    <el-option v-for="item in sellerList" :key="item.id" :label="item.nick" :value="item.id" />
                   </el-select>
                 </el-form-item>
-                <el-form-item
-                  label="客户："
-                  prop="sellCustomerId"
-                  v-show="
-                    watchStateMsgData.state == 3 || watchStateMsgData.state == 4
-                  "
-                >
-                  <el-select
-                    style="width: 600px"
-                    size="large"
-                    v-model="watchStateMsgData.sellCustomerId"
-                  >
-                    <el-option
-                      v-for="item in customerList"
-                      :key="item.id"
-                      :label="item.name"
-                      :value="item.id"
-                    >
+                <el-form-item label="客户：" prop="sellCustomerId" v-show="
+                  watchStateMsgData.state == 3 || watchStateMsgData.state == 4
+                ">
+                  <el-select style="width: 600px" size="large" v-model="watchStateMsgData.sellCustomerId">
+                    <el-option v-for="item in customerList" :key="item.id" :label="item.name" :value="item.id">
                     </el-option>
                   </el-select>
                 </el-form-item>
-                <el-form-item
-                  label="接收公司："
-                  prop="receiveCompanyMsg"
-                  v-show="watchStateMsgData.state == 5"
-                >
-                  <el-select
-                    style="width: 600px"
-                    size="large"
-                    value-key="id"
-                    v-model="watchStateMsgData.receiveCompanyMsg"
-                    @change="receiveCompanyChange"
-                  >
-                    <el-option
-                      v-for="item in receiveCompanyList"
-                      :key="item.id"
-                      :label="item.name"
-                      :value="item"
-                    >
+                <el-form-item label="接收公司：" prop="receiveCompanyMsg" v-show="watchStateMsgData.state == 5">
+                  <el-select style="width: 600px" size="large" value-key="id"
+                    v-model="watchStateMsgData.receiveCompanyMsg" @change="receiveCompanyChange">
+                    <el-option v-for="item in receiveCompanyList" :key="item.id" :label="item.name" :value="item">
                     </el-option>
                   </el-select>
                 </el-form-item>
-                <el-form-item
-                  label="接收仓库："
-                  prop="receiveWarehouseId"
-                  v-show="watchStateMsgData.state == 5"
-                >
-                  <el-select
-                    style="width: 600px"
-                    size="large"
-                    v-model="watchStateMsgData.receiveWarehouseId"
-                  >
-                    <el-option
-                      v-for="item in receiveWarehouseList"
-                      :key="item.id"
-                      :label="item.name"
-                      :value="item.id"
-                    >
+                <el-form-item label="接收仓库：" prop="receiveWarehouseId" v-show="watchStateMsgData.state == 5">
+                  <el-select style="width: 600px" size="large" v-model="watchStateMsgData.receiveWarehouseId">
+                    <el-option v-for="item in receiveWarehouseList" :key="item.id" :label="item.name" :value="item.id">
                     </el-option>
                   </el-select>
                 </el-form-item>
 
-                <el-form-item
-                  label="出库时间："
-                  prop="stockOutTime"
-                  v-show="watchStateMsgData.state == 4"
-                >
-                  <el-date-picker
-                    v-model="watchStateMsgData.stockOutTime"
-                    type="date"
-                    placeholder="请选择出库时间"
-                    format="YYYY-MM-DD"
-                    value-format="YYYY-MM-DD"
-                    size="large"
-                  />
+                <el-form-item label="出库时间：" prop="stockOutTime" v-show="watchStateMsgData.state == 4">
+                  <el-date-picker v-model="watchStateMsgData.stockOutTime" type="date" placeholder="请选择出库时间"
+                    format="YYYY-MM-DD" value-format="YYYY-MM-DD" size="large" />
                 </el-form-item>
-                <el-form-item
-                  label="出库图片："
-                  prop="stockOutPic"
-                  v-if="watchStateMsgData.state == 4"
-                >
-                  <UploadImg
-                    :imgUrl="watchStateMsgData.stockOutPic"
-                    :imgType="2"
-                    @imgChange="stockOutImgUrlChange"
-                  ></UploadImg>
+                <el-form-item label="出库图片：" prop="stockOutPic" v-if="watchStateMsgData.state == 4">
+                  <UploadImg :imgUrl="watchStateMsgData.stockOutPic" :imgType="2" @imgChange="stockOutImgUrlChange">
+                  </UploadImg>
                 </el-form-item>
 
-                <el-form-item
-                  label="提货人："
-                  prop="sellSendUserNick"
-                  v-show="watchStateMsgData.state == 4"
-                >
-                  <el-input
-                    style="width: 600px"
-                    size="large"
-                    v-model="watchStateMsgData.sellSendUserNick"
-                    placeholder="请输入提货人"
-                  ></el-input>
+                <el-form-item label="提货人：" prop="sellSendUserNick" v-show="watchStateMsgData.state == 4">
+                  <el-input style="width: 600px" size="large" v-model="watchStateMsgData.sellSendUserNick"
+                    placeholder="请输入提货人"></el-input>
                 </el-form-item>
 
                 <el-form-item label="收款状态：" prop="sellPayState">
@@ -791,11 +404,7 @@
                 </el-form-item>
 
                 <el-form-item label="备注：" prop="sellNote">
-                  <el-input
-                    style="width: 600px"
-                    type="textarea"
-                    v-model="watchStateMsgData.sellNote"
-                  />
+                  <el-input style="width: 600px" type="textarea" v-model="watchStateMsgData.sellNote" />
                 </el-form-item>
               </el-form>
             </el-tab-pane>
@@ -805,93 +414,51 @@
                 <div class="every2">内容</div>
                 <div class="every3">操作</div>
               </div>
-              <div
-                class="code-table"
-                style="margin-top: 5px; margin-bottom: 30px"
-              >
+              <div class="code-table" style="margin-top: 5px; margin-bottom: 30px">
                 <div class="every1">
-                  <el-date-picker
-                    v-model="noteTime"
-                    type="date"
-                    :clearable="false"
-                    placeholder="请选择时间"
-                    format="YYYY-MM-DD"
-                    value-format="YYYY-MM-DD"
-                    size="large"
-                  />
+                  <el-date-picker v-model="noteTime" type="date" :clearable="false" placeholder="请选择时间"
+                    format="YYYY-MM-DD" value-format="YYYY-MM-DD" size="large" />
                 </div>
                 <div class="every2">
-                  <el-input
-                    size="large"
-                    v-model="noteFont"
-                    autosize
-                    type="textarea"
-                    placeholder="请输入"
-                  />
+                  <el-input size="large" v-model="noteFont" autosize type="textarea" placeholder="请输入" />
                 </div>
 
                 <div class="every3">
                   <div class="btn-row" style="cursor: pointer">
-                    <el-icon :size="23" color="#0c7063" @click="addNote"
-                      ><CirclePlus
-                    /></el-icon>
+                    <el-icon :size="23" color="#0c7063" @click="addNote">
+                      <CirclePlus />
+                    </el-icon>
                   </div>
                 </div>
               </div>
-              <div
-                class="code-table"
-                style="margin-bottom: 10px"
-                v-for="(items, index) in noteList"
-                :key="index"
-              >
+              <div class="code-table" style="margin-bottom: 10px" v-for="(items, index) in noteList" :key="index">
                 <div class="every1">
-                  <el-date-picker
-                    :clearable="false"
-                    v-model="items.time"
-                    type="date"
-                    placeholder="请选择时间"
-                    format="YYYY-MM-DD"
-                    value-format="YYYY-MM-DD"
-                    size="large"
-                  />
+                  <el-date-picker :clearable="false" v-model="items.time" type="date" placeholder="请选择时间"
+                    format="YYYY-MM-DD" value-format="YYYY-MM-DD" size="large" />
                 </div>
                 <div class="every2">
-                  <el-input
-                    size="large"
-                    v-model="items.note"
-                    autosize
-                    type="textarea"
-                    placeholder="请输入"
-                  />
+                  <el-input size="large" v-model="items.note" autosize type="textarea" placeholder="请输入" />
                 </div>
 
                 <div class="every3">
                   <div class="btn-row" style="cursor: pointer">
-                    <el-icon :size="23" color="#0c7063" @click="delNote(index)"
-                      ><Delete
-                    /></el-icon>
+                    <el-icon :size="23" color="#0c7063" @click="delNote(index)">
+                      <Delete />
+                    </el-icon>
                   </div>
                 </div>
               </div>
             </el-tab-pane>
           </el-tabs>
 
-          <div
-            style="
-              width: 722px;
-              margin-top: 40px;
-              display: flex;
-              justify-content: flex-end;
-            "
-          >
-            <el-button
-              style="width: 150px"
-              type="primary"
-              size="large"
-              v-preventClick
-              @click="saveWatchMsg"
-              >保 存</el-button
-            >
+          <div style="
+                                          width: 722px;
+                                          margin-top: 40px;
+                                          display: flex;
+                                          justify-content: flex-end;
+                                        ">
+            <el-button style="width: 150px" type="primary" size="large" v-preventClick @click="saveWatchMsg">保
+              存</el-button>
           </div>
         </div>
       </div>
@@ -919,6 +486,7 @@ onMounted(() => {
 
 const purchasePage = ref(0);
 const purchaseEnterRef = ref();
+const currencyGlobal = ref('');
 
 let watchMsgData = reactive({
   buyDate: getDateNow(),
@@ -957,6 +525,7 @@ let watchStateMsgData = ref({
   // 手表信息
   buyWatchId: null,
   buyWatchPrice: undefined,
+  buySettlePrice: undefined,
   buyWatchSn: "",
   buyWatchCard: "",
   buyWatchParts: [],
@@ -1021,13 +590,7 @@ const watchStateMsgRules = reactive({
       trigger: "change",
     },
   ],
-  buyWatchPrice: [
-    {
-      required: true,
-      message: "请填写采购价格",
-      trigger: "blur",
-    },
-  ],
+
   watchModel: [
     {
       required: true,
@@ -1199,13 +762,15 @@ const getCurList = async () => {
   console.log("国家列表", res);
 
   let countryData = res.data;
-  let list = [];
+
+  currencyList.value = [...new Set(countryData.map(v => v.enCurrency))];
+
   for (let item of countryData) {
-    if (list.indexOf(item.enCurrency) === -1) {
-      list.push(item.enCurrency);
+    if (item.enCurrency === userStore.adminInfo.settleCurrency) {
+      currencyGlobal.value = item.cnCurrency;
+      return
     }
   }
-  currencyList.value = list;
 };
 getCurList();
 
@@ -1275,6 +840,7 @@ const addWatch = () => {
       myPic: "",
       buyWatchId: null,
       buyWatchPrice: undefined,
+      buySettlePrice: undefined,
       buyWatchSn: "",
       buyWatchCard: "",
       buyWatchParts: [],
@@ -1628,8 +1194,17 @@ const delNote = (index) => {
 
 // 保存添加的手表
 const saveWatchMsg = () => {
+
   watchFilterRef.value.validate((valid) => {
     if (!valid) return;
+
+    if (!watchStateMsgData.value.buyWatchPrice && !watchStateMsgData.value.buySettlePrice) {
+      ElMessage.warning({
+        message: "请输入采购外币金额或" + currencyGlobal.value + '金额',
+        duration: 2000,
+      });
+      return;
+    }
     watchRef.value.validate((valid) => {
       if (!valid) {
         ElMessage.warning({

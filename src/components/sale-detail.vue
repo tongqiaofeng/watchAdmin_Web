@@ -5,118 +5,42 @@
       <img class="back-icon" src="../assets/imgs/goback.png" />
       <span class="font">返回</span>
     </div>
-    <el-form
-      ref="addSalesTicketForm"
-      :model="addDataConsign"
-      :rules="addDataRules"
-      label-width="98px"
-    >
+    <el-form ref="addSalesTicketForm" :model="addDataConsign" :rules="addDataRules" label-width="98px">
       <el-form-item label="库存状态：" prop="state">
-        <el-select
-          size="large"
-          style="width: 600px"
-          v-model="addDataConsign.state"
-          placeholder="请选择"
-          @change="stateChange"
-        >
-          <el-option
-            v-for="item in stateList"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          >
+        <el-select size="large" style="width: 600px" v-model="addDataConsign.state" placeholder="请选择"
+          @change="stateChange">
+          <el-option v-for="item in stateList" :key="item.value" :label="item.label" :value="item.value">
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item
-        prop="stockSellTime"
-        :label="addDataConsign.state == 5 ? '寄卖时间：' : '出售时间：'"
-      >
-        <el-date-picker
-          size="large"
-          v-model="addDataConsign.stockSellTime"
-          type="date"
-          format="YYYY-MM-DD"
-          value-format="YYYY-MM-DD"
-          placeholder="请选择"
-        ></el-date-picker>
+      <el-form-item prop="stockSellTime" :label="addDataConsign.state == 5 ? '寄卖时间：' : '出售时间：'">
+        <el-date-picker size="large" v-model="addDataConsign.stockSellTime" type="date" format="YYYY-MM-DD"
+          value-format="YYYY-MM-DD" placeholder="请选择"></el-date-picker>
       </el-form-item>
       <el-form-item label="销售员：" prop="sellUserId">
-        <el-select
-          size="large"
-          style="width: 600px"
-          v-model="addDataConsign.sellUserId"
-          placeholder="请选择销售员"
-          @change="getCustomerList"
-        >
-          <el-option
-            v-for="item in sellerList"
-            :key="item.id"
-            :label="item.nick"
-            :value="item.id"
-          >
+        <el-select size="large" style="width: 600px" v-model="addDataConsign.sellUserId" placeholder="请选择销售员"
+          @change="getCustomerList">
+          <el-option v-for="item in sellerList" :key="item.id" :label="item.nick" :value="item.id">
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item
-        label="客户："
-        prop="sellCustomerId"
-        v-show="addDataConsign.state != 5"
-      >
-        <el-select
-          style="width: 600px"
-          size="large"
-          v-model="addDataConsign.sellCustomerId"
-          filterable
-          clearable
-          placeholder="可输入客户名称进行搜索"
-        >
-          <el-option
-            v-for="item in customerList"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          />
+      <el-form-item label="客户：" prop="sellCustomerId" v-show="addDataConsign.state != 5">
+        <el-select style="width: 600px" size="large" v-model="addDataConsign.sellCustomerId" filterable clearable
+          placeholder="可输入客户名称进行搜索">
+          <el-option v-for="item in customerList" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
 
-      <el-form-item
-        label="接收公司："
-        prop="receiveCompanyMsg"
-        v-show="addDataConsign.state == 5"
-      >
-        <el-select
-          style="width: 600px"
-          size="large"
-          value-key="id"
-          v-model="addDataConsign.receiveCompanyMsg"
-          @change="receiveCompanyChange"
-        >
-          <el-option
-            v-for="item in receiveCompanyList"
-            :key="item.id"
-            :label="item.name"
-            :value="item"
-          >
+      <el-form-item label="接收公司：" prop="receiveCompanyMsg" v-show="addDataConsign.state == 5">
+        <el-select style="width: 600px" size="large" value-key="id" v-model="addDataConsign.receiveCompanyMsg"
+          @change="receiveCompanyChange">
+          <el-option v-for="item in receiveCompanyList" :key="item.id" :label="item.name" :value="item">
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item
-        label="接收仓库："
-        prop="receiveWarehouseId"
-        v-show="addDataConsign.state == 5"
-      >
-        <el-select
-          style="width: 600px"
-          size="large"
-          v-model="addDataConsign.receiveWarehouseId"
-        >
-          <el-option
-            v-for="item in receiveWarehouseList"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          >
+      <el-form-item label="接收仓库：" prop="receiveWarehouseId" v-show="addDataConsign.state == 5">
+        <el-select style="width: 600px" size="large" v-model="addDataConsign.receiveWarehouseId">
+          <el-option v-for="item in receiveWarehouseList" :key="item.id" :label="item.name" :value="item.id">
           </el-option>
         </el-select>
       </el-form-item>
@@ -129,47 +53,18 @@
         </el-radio-group>
       </el-form-item>
 
-      <el-form-item
-        label="提货人："
-        prop="sellSendUserNick"
-        v-show="addDataConsign.state == 4"
-      >
-        <el-input
-          style="width: 600px"
-          size="large"
-          v-model="addDataConsign.sellSendUserNick"
-          placeholder="请输入提货人"
-        ></el-input>
+      <el-form-item label="提货人：" prop="sellSendUserNick" v-show="addDataConsign.state == 4">
+        <el-input style="width: 600px" size="large" v-model="addDataConsign.sellSendUserNick"
+          placeholder="请输入提货人"></el-input>
       </el-form-item>
-      <el-form-item
-        label="出库时间："
-        prop="stockOutTime"
-        v-show="addDataConsign.state == 4"
-      >
-        <el-date-picker
-          size="large"
-          v-model="addDataConsign.stockOutTime"
-          type="date"
-          placeholder="请选择"
-          value-format="YYYY-MM-DD"
-          format="YYYY-MM-DD"
-        ></el-date-picker>
+      <el-form-item label="出库时间：" prop="stockOutTime" v-show="addDataConsign.state == 4">
+        <el-date-picker size="large" v-model="addDataConsign.stockOutTime" type="date" placeholder="请选择"
+          value-format="YYYY-MM-DD" format="YYYY-MM-DD"></el-date-picker>
       </el-form-item>
 
-      <el-form-item
-        :label="addDataConsign.state == 5 ? '寄卖商品：' : '出售商品：'"
-        prop="watchList"
-      >
-        <el-collapse
-          accordion
-          style="width: 100%"
-          v-if="addDataConsign.watchList.length > 0"
-        >
-          <el-collapse-item
-            v-for="(item, index) in addDataConsign.watchList"
-            :key="item.id"
-            :name="index"
-          >
+      <el-form-item :label="addDataConsign.state == 5 ? '寄卖商品：' : '出售商品：'" prop="watchList">
+        <el-collapse accordion style="width: 100%" v-if="addDataConsign.watchList.length > 0">
+          <el-collapse-item v-for="(item, index) in addDataConsign.watchList" :key="item.id" :name="index">
             <template #title>
               <div style="color: #258b7d; font-weight: 700">
                 {{ item.brand + " - " + item.model }}
@@ -177,51 +72,25 @@
             </template>
             <div>
               <el-form label-width="98px">
-                <el-form-item
-                  :label="
-                    addDataConsign.state == 5 ? '寄卖金额：' : '出售金额：'
-                  "
-                >
+                <el-form-item :label="
+                  addDataConsign.state == 5 ? '寄卖金额：' : '出售金额：'
+                ">
                   <div style="display: flex">
-                    <el-input
-                      size="large"
-                      type="text"
-                      placeholder="请输入"
-                      v-model="item.sellMoney"
-                      clearable
-                    >
+                    <el-input size="large" type="text" placeholder="请输入" v-model="item.sellMoney" clearable>
                     </el-input>
                     <el-select size="large" v-model="item.sellCurrency">
-                      <el-option
-                        v-for="(item, index) in currencyList"
-                        :key="index"
-                        :label="item"
-                        :value="item"
-                      >
+                      <el-option v-for="(item, index) in currencyList" :key="index" :label="item" :value="item">
                       </el-option>
                     </el-select>
                   </div>
                 </el-form-item>
                 <el-form-item label="销售备注：">
-                  <el-input
-                    style="width: 502px"
-                    size="large"
-                    type="textarea"
-                    placeholder="请输入"
-                    v-model="item.sellNote"
-                    clearable
-                  ></el-input>
+                  <el-input style="width: 502px" size="large" type="textarea" placeholder="请输入" v-model="item.sellNote"
+                    clearable></el-input>
                 </el-form-item>
-                <el-form-item
-                  label="出库图片："
-                  v-if="addDataConsign.state == 4"
-                >
-                  <UploadImg
-                    :imgUrl="item.stockOutPic"
-                    :index="index"
-                    :imgType="2"
-                    @imgChange="stockOutImgUrlChange"
-                  ></UploadImg>
+                <el-form-item label="出库图片：" v-if="addDataConsign.state == 4">
+                  <UploadImg :imgUrl="item.stockOutPic" :index="index" :imgType="2" @imgChange="stockOutImgUrlChange">
+                  </UploadImg>
                 </el-form-item>
               </el-form>
             </div>
@@ -231,14 +100,7 @@
     </el-form>
 
     <div class="submitBtn">
-      <el-button
-        type="primary"
-        size="large"
-        style="width: 150px"
-        v-preventClick
-        @click="submitSales"
-        >提 交</el-button
-      >
+      <el-button type="primary" size="large" style="width: 150px" v-preventClick @click="submitSales">提 交</el-button>
     </div>
   </div>
 </template>
@@ -466,8 +328,7 @@ function submitSales() {
       for (let item of addDataConsign.value.watchList) {
         if (!item.sellMoney) {
           ElMessageBox.alert(
-            `${item.brand + " - " + item.model}${
-              addDataConsign.value.state == 5 ? "寄卖" : "出售"
+            `${item.brand + " - " + item.model}${addDataConsign.value.state == 5 ? "寄卖" : "出售"
             }金额为空，请填写`,
             "提示",
             {
@@ -497,8 +358,8 @@ function submitSales() {
         for (let item of addDataConsign.value.watchList) {
           item.stockOutPic = item.stockOutPic
             ? item.stockOutPic.split("|").filter((el) => {
-                return el != "";
-              })
+              return el != "";
+            })
             : [];
         }
 
@@ -538,13 +399,7 @@ const getCountryCurrency = async () => {
   console.log("国家列表", res);
 
   let countryData = res.data;
-  let list = [];
-  for (let item of countryData) {
-    if (list.indexOf(item.enCurrency) === -1) {
-      list.push(item.enCurrency);
-    }
-  }
-  currencyList.value = list;
+  currencyList.value = [...new Set(countryData.map(v => v.enCurrency))];
 };
 getCountryCurrency();
 </script>

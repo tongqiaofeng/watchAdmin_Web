@@ -387,6 +387,7 @@ const delImgAndUrl = (item) => {
   console.log(item);
   updateIndex(item)
   imgAndUrlData.value.dataStrList.splice(updateI.value, 1);
+  updateI.value = null
 };
 
 // 选择关联产品

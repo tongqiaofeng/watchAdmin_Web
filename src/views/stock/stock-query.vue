@@ -6,61 +6,25 @@
         <!-- 查询 -->
         <el-form inline class="stock-search-form">
           <el-form-item label="库存地：">
-            <el-select
-              style="width: 260px"
-              v-model="stockSearchParams.warehouseIdList"
-              size="large"
-              placeholder="请选择库存地"
-              multiple
-              clearable
-            >
+            <el-select style="width: 260px" v-model="stockSearchParams.warehouseIdList" size="large" placeholder="请选择库存地"
+              multiple clearable>
               <!-- <el-option label="全部" :value="'null'"></el-option> -->
-              <el-option
-                v-for="item in warehouseList"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              >
+              <el-option v-for="item in warehouseList" :key="item.id" :label="item.name" :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="采购员：">
-            <el-select
-              v-model="stockSearchParams.buyerIdList"
-              class="m-2"
-              placeholder="请选择"
-              size="large"
-              multiple
-              clearable
-            >
-              <el-option
-                v-for="item in buyerList"
-                :key="item.id"
-                :label="item.nick"
-                :value="item.id"
-              />
+            <el-select v-model="stockSearchParams.buyerIdList" class="m-2" placeholder="请选择" size="large" multiple
+              clearable>
+              <el-option v-for="item in buyerList" :key="item.id" :label="item.nick" :value="item.id" />
             </el-select>
           </el-form-item>
           <el-form-item label="年份选择：">
-            <el-date-picker
-              size="large"
-              :clearable="true"
-              type="year"
-              format="YYYY"
-              value-format="YYYY"
-              placeholder="请选择"
-              v-model="stockSearchParams.year"
-            />
+            <el-date-picker size="large" :clearable="true" type="year" format="YYYY" value-format="YYYY" placeholder="请选择"
+              v-model="stockSearchParams.year" />
           </el-form-item>
           <el-form-item label="库存状态：">
-            <el-select
-              style="width: 360px"
-              v-model="stockSearchStates"
-              size="large"
-              placeholder="可多选"
-              multiple
-              clearable
-            >
+            <el-select style="width: 360px" v-model="stockSearchStates" size="large" placeholder="可多选" multiple clearable>
               <el-option label="采购中" :value="0"></el-option>
               <el-option label="运输中" :value="1"></el-option>
               <el-option label="已入库" :value="2"></el-option>
@@ -71,42 +35,21 @@
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-input
-              size="large"
-              style="width: 450px"
-              v-model="stockSearchParams.keyword"
-              placeholder="可输入手表品牌、型号、机芯号、货号进行查询"
-              clearable
-            ></el-input>
+            <el-input size="large" style="width: 450px" v-model="stockSearchParams.keyword"
+              placeholder="可输入手表品牌、型号、机芯号、货号进行查询" clearable></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button
-              size="large"
-              type="primary"
-              @click="handleCurrentChange(1)"
-              >查 询</el-button
-            >
+            <el-button size="large" type="primary" @click="handleCurrentChange(1)">查 询</el-button>
           </el-form-item>
         </el-form>
         <div class="stock-table-box">
-          <el-table
-            :data="stockList"
-            border
-            stripe
-            empty-text="暂无数据"
-            v-loading="loading"
-            element-loading-text="加载中..."
-            element-loading-spinner="el-icon-loading"
-          >
+          <el-table :data="stockList" border stripe empty-text="暂无数据" v-loading="loading" element-loading-text="加载中..."
+            element-loading-spinner="el-icon-loading">
             <el-table-column prop="stockNo" align="center" label="货号" />
             <el-table-column prop="pics" align="center" label="图片">
               <template v-slot="scope">
-                <el-image
-                  preview-teleported
-                  style="width: 90px; height: 90px; z-index: 9999"
-                  :src="base_request_url + scope.row.pics"
-                  :preview-src-list="[base_request_url + scope.row.pics]"
-                />
+                <el-image preview-teleported style="width: 90px; height: 90px; z-index: 9999"
+                  :src="base_request_url + scope.row.pics" :preview-src-list="[base_request_url + scope.row.pics]" />
               </template>
             </el-table-column>
             <el-table-column align="center" label="品牌型号">
@@ -119,17 +62,10 @@
 
             <el-table-column prop="warehouseName" align="center" label="库存地">
               <template v-slot="scope">
-                <span v-if="scope.row.state == 0 || !scope.row.warehouseName"
-                  >暂无</span
-                >
+                <span v-if="scope.row.state == 0 || !scope.row.warehouseName">暂无</span>
                 <div v-else>
                   <span>{{ scope.row.warehouseName }}</span>
-                  <el-icon
-                    @click="showUpdateWarehouse(scope.row)"
-                    class="edit-icon"
-                    size="16px"
-                    color="#0c7063"
-                  >
+                  <el-icon @click="showUpdateWarehouse(scope.row)" class="edit-icon" size="16px" color="#0c7063">
                     <EditPen />
                   </el-icon>
                 </div>
@@ -138,21 +74,11 @@
             <el-table-column prop="state" align="center" label="库存状态">
               <template v-slot="scope">
                 <el-tag type="info" v-if="scope.row.state == 0">采购中</el-tag>
-                <el-tag type="warning" v-if="scope.row.state == 1"
-                  >运输中</el-tag
-                >
-                <el-tag type="warning" v-if="scope.row.state == 2"
-                  >已入库</el-tag
-                >
-                <el-tag type="success" v-if="scope.row.state == 3"
-                  >已售未出库</el-tag
-                >
-                <el-tag type="warning" v-if="scope.row.state == 4"
-                  >已售已出库</el-tag
-                >
-                <el-tag type="danger" v-if="scope.row.state == 5"
-                  >已寄卖</el-tag
-                >
+                <el-tag type="warning" v-if="scope.row.state == 1">运输中</el-tag>
+                <el-tag type="warning" v-if="scope.row.state == 2">已入库</el-tag>
+                <el-tag type="success" v-if="scope.row.state == 3">已售未出库</el-tag>
+                <el-tag type="warning" v-if="scope.row.state == 4">已售已出库</el-tag>
+                <el-tag type="danger" v-if="scope.row.state == 5">已寄卖</el-tag>
                 <!-- <el-icon
                   @click="showUpdateStockStatus(scope.row)"
                   class="edit-icon"
@@ -173,11 +99,7 @@
               </template>
             </el-table-column>
 
-            <el-table-column
-              prop="stockOutTime"
-              align="center"
-              label="出库日期"
-            >
+            <el-table-column prop="stockOutTime" align="center" label="出库日期">
               <template v-slot="scope">
                 <span v-if="scope.row.state == 4 || scope.row.state == 5">{{
                   scope.row.stockOutTime
@@ -185,20 +107,13 @@
                 <span v-else>暂无</span>
               </template>
             </el-table-column>
-            <el-table-column
-              prop="stockOutTime"
-              align="center"
-              label="在库时长"
-            >
+            <el-table-column prop="stockOutTime" align="center" label="在库时长">
               <template v-slot="scope">
-                <span v-if="scope.row.state == 2 || scope.row.state == 3"
-                  >{{ diffDay(scope.row.stockInTime, getDateNow()) }}天</span
-                >
-                <span v-else-if="scope.row.state == 4 || scope.row.state == 5"
-                  >{{
-                    diffDay(scope.row.stockInTime, scope.row.stockOutTime)
-                  }}天</span
-                >
+                <span v-if="scope.row.state == 2 || scope.row.state == 3">{{ diffDay(scope.row.stockInTime, getDateNow())
+                }}天</span>
+                <span v-else-if="scope.row.state == 4 || scope.row.state == 5">{{
+                  diffDay(scope.row.stockInTime, scope.row.stockOutTime)
+                }}天</span>
                 <span v-else>暂无</span>
               </template>
             </el-table-column>
@@ -208,11 +123,7 @@
                   <div class="btn" @click="showWarehouseEdit(scope.row.id)">
                     <span>编辑</span>
                   </div>
-                  <div
-                    class="btn"
-                    style="margin: 0"
-                    @click="showNoteDialog(scope.row.note)"
-                  >
+                  <div class="btn" style="margin: 0" @click="showNoteDialog(scope.row.note)">
                     <span>备注</span>
                   </div>
                 </div>
@@ -221,12 +132,8 @@
           </el-table>
           <div style="width: 100%; height: 50px">
             <div style="margin: 15px 0; position: absolute; right: 6%">
-              <el-pagination
-                @current-change="handleCurrentChange"
-                :current-page="stockSearchParams.page"
-                layout="total, prev, pager, next, jumper"
-                :total="total"
-              >
+              <el-pagination @current-change="handleCurrentChange" :current-page="stockSearchParams.page"
+                layout="total, prev, pager, next, jumper" :total="total">
               </el-pagination>
             </div>
           </div>
@@ -234,48 +141,18 @@
       </div>
 
       <!-- 库存地修改弹窗 -->
-      <el-dialog
-        :title="'库存地数据'"
-        width="750px"
-        v-model="warehouseDialog"
-        center
-        v-if="warehouseDialog"
-      >
+      <el-dialog :title="'库存地数据'" width="750px" v-model="warehouseDialog" center v-if="warehouseDialog">
         <div>
-          <el-form
-            ref="warehouseRef"
-            :model="warehouseForm"
-            :rules="warehouseRules"
-            label-width="95px"
-          >
+          <el-form ref="warehouseRef" :model="warehouseForm" :rules="warehouseRules" label-width="95px">
             <el-form-item label="库存地：" prop="warehouseName">
-              <el-select
-                style="width: 100%"
-                size="large"
-                v-model="warehouseForm.warehouseId"
-                placeholder="请选择库存地点"
-                @change="selectStockWarehouse"
-              >
-                <el-option
-                  v-for="item in warehouseList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
-                ></el-option>
+              <el-select style="width: 100%" size="large" v-model="warehouseForm.warehouseId" placeholder="请选择库存地点"
+                @change="selectStockWarehouse">
+                <el-option v-for="item in warehouseList" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item
-              v-if="warehouseForm.state > 1"
-              label="入库时间："
-              prop="stockInTime"
-            >
-              <el-date-picker
-                v-model="warehouseForm.stockInTime"
-                type="date"
-                placeholder="请选择入库时间"
-                size="large"
-                value-format="YYYY-MM-DD"
-              />
+            <el-form-item v-if="warehouseForm.state > 1" label="入库时间：" prop="stockInTime">
+              <el-date-picker v-model="warehouseForm.stockInTime" type="date" placeholder="请选择入库时间" size="large"
+                value-format="YYYY-MM-DD" />
             </el-form-item>
             <el-form-item label="备注：" prop="note">
               <div class="code-table">
@@ -283,71 +160,37 @@
                 <div class="every2">内容</div>
                 <div class="every3">操作</div>
               </div>
-              <div
-                class="code-table"
-                style="margin-top: 5px; margin-bottom: 30px"
-              >
+              <div class="code-table" style="margin-top: 5px; margin-bottom: 30px">
                 <div class="every1">
-                  <el-date-picker
-                    v-model="noteTime"
-                    type="date"
-                    :clearable="false"
-                    placeholder="请选择时间"
-                    format="YYYY-MM-DD"
-                    value-format="YYYY-MM-DD"
-                    size="large"
-                  />
+                  <el-date-picker v-model="noteTime" type="date" :clearable="false" placeholder="请选择时间"
+                    format="YYYY-MM-DD" value-format="YYYY-MM-DD" size="large" />
                 </div>
                 <div class="every2">
-                  <el-input
-                    size="large"
-                    v-model="noteFont"
-                    autosize
-                    type="textarea"
-                    placeholder="请输入"
-                  />
+                  <el-input size="large" v-model="noteFont" autosize type="textarea" placeholder="请输入" />
                 </div>
 
                 <div class="every3">
                   <div class="btn-row" style="cursor: pointer">
-                    <el-icon :size="23" color="#0c7063" @click="addNote"
-                      ><CirclePlus
-                    /></el-icon>
+                    <el-icon :size="23" color="#0c7063" @click="addNote">
+                      <CirclePlus />
+                    </el-icon>
                   </div>
                 </div>
               </div>
-              <div
-                class="code-table"
-                style="margin-bottom: 10px"
-                v-for="(items, index) in noteList"
-                :key="index"
-              >
+              <div class="code-table" style="margin-bottom: 10px" v-for="(items, index) in noteList" :key="index">
                 <div class="every1">
-                  <el-date-picker
-                    :clearable="false"
-                    v-model="items.time"
-                    type="date"
-                    placeholder="请选择时间"
-                    format="YYYY-MM-DD"
-                    value-format="YYYY-MM-DD"
-                    size="large"
-                  />
+                  <el-date-picker :clearable="false" v-model="items.time" type="date" placeholder="请选择时间"
+                    format="YYYY-MM-DD" value-format="YYYY-MM-DD" size="large" />
                 </div>
                 <div class="every2">
-                  <el-input
-                    size="large"
-                    v-model="items.note"
-                    autosize
-                    type="textarea"
-                    placeholder="请输入"
-                  />
+                  <el-input size="large" v-model="items.note" autosize type="textarea" placeholder="请输入" />
                 </div>
 
                 <div class="every3">
                   <div class="btn-row" style="cursor: pointer">
-                    <el-icon :size="23" color="#0c7063" @click="delNote(index)"
-                      ><Delete
-                    /></el-icon>
+                    <el-icon :size="23" color="#0c7063" @click="delNote(index)">
+                      <Delete />
+                    </el-icon>
                   </div>
                 </div>
               </div>
@@ -356,40 +199,17 @@
         </div>
 
         <template #footer>
-          <el-button size="large" @click="warehouseDialog = false"
-            >取 消</el-button
-          >
-          <el-button type="primary" size="large" @click="postWarehouseForm"
-            >确 定</el-button
-          >
+          <el-button size="large" @click="warehouseDialog = false">取 消</el-button>
+          <el-button type="primary" size="large" @click="postWarehouseForm">确 定</el-button>
         </template>
       </el-dialog>
 
       <!-- 库存状态修改弹窗 -->
-      <el-dialog
-        :title="'库存数据'"
-        width="800px"
-        v-model="stockStateDialog"
-        v-if="stockStateDialog"
-        center
-      >
+      <el-dialog :title="'库存数据'" width="800px" v-model="stockStateDialog" v-if="stockStateDialog" center>
         <div>
-          <el-form
-            ref="stockStateRef"
-            :model="stockStateForm"
-            :rules="stockStateRules"
-            label-width="110px"
-          >
-            <el-form-item
-              label="库存状态："
-              prop="state"
-              :rules="{ required: true, message: '请选择库存状态' }"
-            >
-              <el-select
-                v-model="stockStateForm.state"
-                size="large"
-                placeholder="请选择库存状态"
-              >
+          <el-form ref="stockStateRef" :model="stockStateForm" :rules="stockStateRules" label-width="110px">
+            <el-form-item label="库存状态：" prop="state" :rules="{ required: true, message: '请选择库存状态' }">
+              <el-select v-model="stockStateForm.state" size="large" placeholder="请选择库存状态">
                 <el-option label="采购中" value="0"></el-option>
                 <el-option label="运输中" value="1"></el-option>
                 <el-option label="已入库" value="2"></el-option>
@@ -399,190 +219,73 @@
               </el-select>
             </el-form-item>
             <!-- 运输中 -->
-            <el-form-item
-              label="发货时间："
-              :rules="{ required: true, message: '请选择发货时间' }"
-              prop="stockSendTime"
-              v-if="stockStateForm.state == 1"
-            >
-              <el-date-picker
-                v-model="stockStateForm.stockSendTime"
-                type="date"
-                placeholder="请选择发货时间"
-                size="large"
-                value-format="YYYY-MM-DD"
-              />
+            <el-form-item label="发货时间：" :rules="{ required: true, message: '请选择发货时间' }" prop="stockSendTime"
+              v-if="stockStateForm.state == 1">
+              <el-date-picker v-model="stockStateForm.stockSendTime" type="date" placeholder="请选择发货时间" size="large"
+                value-format="YYYY-MM-DD" />
             </el-form-item>
-            <el-form-item
-              label="预计到达时间："
-              prop="stockArriveTime"
-              v-if="stockStateForm.state == 1"
-            >
-              <el-date-picker
-                v-model="stockStateForm.stockArriveTime"
-                type="date"
-                placeholder="请选择预计到达时间"
-                size="large"
-                value-format="YYYY-MM-DD"
-              />
+            <el-form-item label="预计到达时间：" prop="stockArriveTime" v-if="stockStateForm.state == 1">
+              <el-date-picker v-model="stockStateForm.stockArriveTime" type="date" placeholder="请选择预计到达时间" size="large"
+                value-format="YYYY-MM-DD" />
             </el-form-item>
-            <el-form-item
-              v-if="stockStateForm.state == 1"
-              label="运费："
-              prop="logMoneyEx"
-              :rules="{ required: true, message: '请输入运费' }"
-            >
+            <el-form-item v-if="stockStateForm.state == 1" label="运费：" prop="logMoneyEx"
+              :rules="{ required: true, message: '请输入运费' }">
               <div class="sell-item">
-                <el-input
-                  size="large"
-                  v-model="stockStateForm.logMoneyEx"
-                  class="sell-input"
-                  placeholder="请输入运费金额"
-                />
-                <el-select
-                  class="sell-currency"
-                  size="large"
-                  v-model="stockStateForm.logCurrency"
-                  placeholder="运费币种"
-                  clearable
-                >
-                  <el-option
-                    v-for="(item, index) in currencyList"
-                    :key="index"
-                    :label="item"
-                    :value="item"
-                  >
+                <el-input size="large" v-model="stockStateForm.logMoneyEx" class="sell-input" placeholder="请输入运费金额" />
+                <el-select class="sell-currency" size="large" v-model="stockStateForm.logCurrency" placeholder="运费币种"
+                  clearable>
+                  <el-option v-for="(item, index) in currencyList" :key="index" :label="item" :value="item">
                   </el-option>
                 </el-select>
               </div>
             </el-form-item>
-            <el-form-item
-              label="到达仓库："
-              :rules="{ required: true, message: '请选择到达仓库' }"
-              v-if="stockStateForm.state == 1"
-              prop="warehouseId"
-            >
-              <el-select
-                v-model="stockStateForm.warehouseId"
-                size="large"
-                placeholder="请选择仓库"
-                @change="selectStockWarehouse1"
-              >
-                <el-option
-                  v-for="item in warehouseList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
-                >
+            <el-form-item label="到达仓库：" :rules="{ required: true, message: '请选择到达仓库' }" v-if="stockStateForm.state == 1"
+              prop="warehouseId">
+              <el-select v-model="stockStateForm.warehouseId" size="large" placeholder="请选择仓库"
+                @change="selectStockWarehouse1">
+                <el-option v-for="item in warehouseList" :key="item.id" :label="item.name" :value="item.id">
                 </el-option>
               </el-select>
             </el-form-item>
             <!-- 已入库 -->
-            <el-form-item
-              v-if="stockStateForm.state == 2"
-              label="入库时间："
-              prop="stockInTime"
-              :rules="{ required: true, message: '请选择入库时间' }"
-            >
-              <el-date-picker
-                v-model="stockStateForm.stockInTime"
-                type="date"
-                placeholder="请选择入库时间"
-                size="large"
-                value-format="YYYY-MM-DD"
-              />
+            <el-form-item v-if="stockStateForm.state == 2" label="入库时间：" prop="stockInTime"
+              :rules="{ required: true, message: '请选择入库时间' }">
+              <el-date-picker v-model="stockStateForm.stockInTime" type="date" placeholder="请选择入库时间" size="large"
+                value-format="YYYY-MM-DD" />
             </el-form-item>
 
             <!-- 已出售 -->
-            <el-form-item
-              v-if="stockStateForm.state >= 3"
-              :label="stockStateForm.state == 5 ? '寄卖时间：' : '出售时间：'"
-              prop="stockSellTime"
-              :rules="{ required: true, message: '请选择出售时间' }"
-            >
-              <el-date-picker
-                v-model="stockStateForm.stockSellTime"
-                type="date"
-                placeholder="请选择手表出售时间"
-                size="large"
-                value-format="YYYY-MM-DD"
-              />
+            <el-form-item v-if="stockStateForm.state >= 3" :label="stockStateForm.state == 5 ? '寄卖时间：' : '出售时间：'"
+              prop="stockSellTime" :rules="{ required: true, message: '请选择出售时间' }">
+              <el-date-picker v-model="stockStateForm.stockSellTime" type="date" placeholder="请选择手表出售时间" size="large"
+                value-format="YYYY-MM-DD" />
             </el-form-item>
-            <el-form-item
-              v-if="stockStateForm.state >= 3"
-              label="销售员："
-              prop="sellUserId"
-              :rules="{ required: true, message: '请选择销售员' }"
-            >
-              <el-select
-                size="large"
-                v-model="stockStateForm.sellUserId"
-                placeholder="请选择销售员"
-              >
-                <el-option
-                  v-for="item in buyerOrSellerList"
-                  :key="item.id"
-                  :label="item.nick"
-                  :value="item.id"
-                >
+            <el-form-item v-if="stockStateForm.state >= 3" label="销售员：" prop="sellUserId"
+              :rules="{ required: true, message: '请选择销售员' }">
+              <el-select size="large" v-model="stockStateForm.sellUserId" placeholder="请选择销售员">
+                <el-option v-for="item in buyerOrSellerList" :key="item.id" :label="item.nick" :value="item.id">
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item
-              v-if="stockStateForm.state >= 3 && stockStateForm.state != 5"
-              label="客户："
-              prop="sellCustomerId"
-              :rules="{ required: true, message: '请选择客户' }"
-            >
-              <el-select
-                size="large"
-                v-model="stockStateForm.sellCustomerId"
-                placeholder="请选择客户"
-              >
-                <el-option
-                  v-for="(item, index) in customerList"
-                  :key="index"
-                  :label="item.name"
-                  :value="item.id"
-                >
+            <el-form-item v-if="stockStateForm.state >= 3 && stockStateForm.state != 5" label="客户：" prop="sellCustomerId"
+              :rules="{ required: true, message: '请选择客户' }">
+              <el-select size="large" v-model="stockStateForm.sellCustomerId" placeholder="请选择客户">
+                <el-option v-for="(item, index) in customerList" :key="index" :label="item.name" :value="item.id">
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item
-              v-if="stockStateForm.state >= 3"
-              :label="stockStateForm.state == 5 ? '寄卖金额：' : '出售金额：'"
-              prop="sellMoney"
-              :rules="{ required: true, message: '请输入金额' }"
-            >
+            <el-form-item v-if="stockStateForm.state >= 3" :label="stockStateForm.state == 5 ? '寄卖金额：' : '出售金额：'"
+              prop="sellMoney" :rules="{ required: true, message: '请输入金额' }">
               <div class="sell-item">
-                <el-input
-                  size="large"
-                  v-model="stockStateForm.sellMoney"
-                  class="sell-input"
-                  placeholder="请输入金额"
-                />
-                <el-select
-                  class="sell-currency"
-                  size="large"
-                  v-model="stockStateForm.sellCurrency"
-                  placeholder="销售币种"
-                  clearable
-                >
-                  <el-option
-                    v-for="(item, index) in currencyList"
-                    :key="index"
-                    :label="item"
-                    :value="item"
-                  >
+                <el-input size="large" v-model="stockStateForm.sellMoney" class="sell-input" placeholder="请输入金额" />
+                <el-select class="sell-currency" size="large" v-model="stockStateForm.sellCurrency" placeholder="销售币种"
+                  clearable>
+                  <el-option v-for="(item, index) in currencyList" :key="index" :label="item" :value="item">
                   </el-option>
                 </el-select>
               </div>
             </el-form-item>
-            <el-form-item
-              v-if="stockStateForm.state >= 3"
-              label="收款状态："
-              prop="sellPayState"
-            >
+            <el-form-item v-if="stockStateForm.state >= 3" label="收款状态：" prop="sellPayState">
               <el-radio-group v-model="stockStateForm.sellPayState">
                 <el-radio :label="0" size="large">未收款</el-radio>
                 <el-radio :label="1" size="large">未完成</el-radio>
@@ -591,100 +294,41 @@
             </el-form-item>
 
             <!-- 已出库 -->
-            <el-form-item
-              v-if="stockStateForm.state == 4"
-              :label="'出库时间'"
-              prop="stockOutTime"
-              :rules="{ required: true, message: '请选择出库时间' }"
-            >
-              <el-date-picker
-                v-model="stockStateForm.stockOutTime"
-                type="date"
-                placeholder="请选择手表出库时间"
-                size="large"
-                value-format="YYYY-MM-DD"
-              />
+            <el-form-item v-if="stockStateForm.state == 4" :label="'出库时间'" prop="stockOutTime"
+              :rules="{ required: true, message: '请选择出库时间' }">
+              <el-date-picker v-model="stockStateForm.stockOutTime" type="date" placeholder="请选择手表出库时间" size="large"
+                value-format="YYYY-MM-DD" />
             </el-form-item>
 
             <el-form-item v-show="stockStateForm.state == 4" label="出库图片：">
-              <uploadImg
-                :imgUrl="stockStateForm.stockOutPic"
-                :imgType="2"
-                @imgChange="stockOutImgUrlChange"
-              ></uploadImg>
+              <uploadImg :imgUrl="stockStateForm.stockOutPic" :imgType="2" @imgChange="stockOutImgUrlChange"></uploadImg>
             </el-form-item>
-            <el-form-item
-              v-if="stockStateForm.state == 4"
-              label="提货人昵称："
-              prop="sellSendUserNick"
-              :rules="{ required: true, message: '请输入提货人' }"
-            >
-              <el-input
-                size="large"
-                v-model="stockStateForm.sellSendUserNick"
-                placeholder="请输入提货人昵称"
-              />
+            <el-form-item v-if="stockStateForm.state == 4" label="提货人昵称：" prop="sellSendUserNick"
+              :rules="{ required: true, message: '请输入提货人' }">
+              <el-input size="large" v-model="stockStateForm.sellSendUserNick" placeholder="请输入提货人昵称" />
             </el-form-item>
 
             <!-- 已寄卖 -->
-            <el-form-item
-              label="接收公司："
-              v-if="stockStateForm.state == 5"
-              prop="receiveCompanyId"
-              :rules="{ required: true, message: '请选择接收公司' }"
-            >
-              <el-select
-                size="large"
-                v-model="stockStateForm.receiveCompanyId"
-                placeholder="请选择接收公司"
-                @change="selectReceiveCompany"
-              >
-                <el-option
-                  v-for="(item, index) in receiveCompanyList"
-                  :key="index"
-                  :label="item.name"
-                  :value="item.id"
-                >
+            <el-form-item label="接收公司：" v-if="stockStateForm.state == 5" prop="receiveCompanyId"
+              :rules="{ required: true, message: '请选择接收公司' }">
+              <el-select size="large" v-model="stockStateForm.receiveCompanyId" placeholder="请选择接收公司"
+                @change="selectReceiveCompany">
+                <el-option v-for="(item, index) in receiveCompanyList" :key="index" :label="item.name" :value="item.id">
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item
-              label="接收仓库："
-              v-if="
-                stockStateForm.state == 5 && stockStateForm.receiveCompanyId
-              "
-              prop="receiveWarehouseId"
-              :rules="{ required: true, message: '请选择接收仓库' }"
-            >
-              <el-select
-                size="large"
-                clearable
-                v-model="stockStateForm.receiveWarehouseId"
-                placeholder="请选择接收仓库"
-                @change="selectReceiveWarehouseList"
-              >
-                <el-option
-                  v-for="(item, index) in receiveWarehouseList"
-                  :key="index"
-                  :label="item.name"
-                  :value="item.id"
-                >
+            <el-form-item label="接收仓库：" v-if="
+              stockStateForm.state == 5 && stockStateForm.receiveCompanyId
+            " prop="receiveWarehouseId" :rules="{ required: true, message: '请选择接收仓库' }">
+              <el-select size="large" clearable v-model="stockStateForm.receiveWarehouseId" placeholder="请选择接收仓库"
+                @change="selectReceiveWarehouseList">
+                <el-option v-for="(item, index) in receiveWarehouseList" :key="index" :label="item.name" :value="item.id">
                 </el-option>
               </el-select>
             </el-form-item>
 
-            <el-form-item
-              v-show="stockStateForm.state == 3 || stockStateForm.state == 5"
-              label="销售备注："
-              prop="sellNote"
-            >
-              <el-input
-                type="textarea"
-                v-model="stockStateForm.sellNote"
-                size="large"
-                row="6"
-                placeholder="请输入销售备注"
-              >
+            <el-form-item v-show="stockStateForm.state == 3 || stockStateForm.state == 5" label="销售备注：" prop="sellNote">
+              <el-input type="textarea" v-model="stockStateForm.sellNote" size="large" row="6" placeholder="请输入销售备注">
               </el-input>
             </el-form-item>
             <el-form-item label="备注：" prop="note">
@@ -693,71 +337,37 @@
                 <div class="every2">内容</div>
                 <div class="every3">操作</div>
               </div>
-              <div
-                class="code-table"
-                style="margin-top: 5px; margin-bottom: 30px"
-              >
+              <div class="code-table" style="margin-top: 5px; margin-bottom: 30px">
                 <div class="every1">
-                  <el-date-picker
-                    v-model="noteTime"
-                    type="date"
-                    :clearable="false"
-                    placeholder="请选择时间"
-                    format="YYYY-MM-DD"
-                    value-format="YYYY-MM-DD"
-                    size="large"
-                  />
+                  <el-date-picker v-model="noteTime" type="date" :clearable="false" placeholder="请选择时间"
+                    format="YYYY-MM-DD" value-format="YYYY-MM-DD" size="large" />
                 </div>
                 <div class="every2">
-                  <el-input
-                    size="large"
-                    v-model="noteFont"
-                    autosize
-                    type="textarea"
-                    placeholder="请输入"
-                  />
+                  <el-input size="large" v-model="noteFont" autosize type="textarea" placeholder="请输入" />
                 </div>
 
                 <div class="every3">
                   <div class="btn-row" style="cursor: pointer">
-                    <el-icon :size="23" color="#0c7063" @click="addNote"
-                      ><CirclePlus
-                    /></el-icon>
+                    <el-icon :size="23" color="#0c7063" @click="addNote">
+                      <CirclePlus />
+                    </el-icon>
                   </div>
                 </div>
               </div>
-              <div
-                class="code-table"
-                style="margin-bottom: 10px"
-                v-for="(items, index) in noteList"
-                :key="index"
-              >
+              <div class="code-table" style="margin-bottom: 10px" v-for="(items, index) in noteList" :key="index">
                 <div class="every1">
-                  <el-date-picker
-                    :clearable="false"
-                    v-model="items.time"
-                    type="date"
-                    placeholder="请选择时间"
-                    format="YYYY-MM-DD"
-                    value-format="YYYY-MM-DD"
-                    size="large"
-                  />
+                  <el-date-picker :clearable="false" v-model="items.time" type="date" placeholder="请选择时间"
+                    format="YYYY-MM-DD" value-format="YYYY-MM-DD" size="large" />
                 </div>
                 <div class="every2">
-                  <el-input
-                    size="large"
-                    v-model="items.note"
-                    autosize
-                    type="textarea"
-                    placeholder="请输入"
-                  />
+                  <el-input size="large" v-model="items.note" autosize type="textarea" placeholder="请输入" />
                 </div>
 
                 <div class="every3">
                   <div class="btn-row" style="cursor: pointer">
-                    <el-icon :size="23" color="#0c7063" @click="delNote(index)"
-                      ><Delete
-                    /></el-icon>
+                    <el-icon :size="23" color="#0c7063" @click="delNote(index)">
+                      <Delete />
+                    </el-icon>
                   </div>
                 </div>
               </div>
@@ -765,22 +375,15 @@
           </el-form>
         </div>
         <template #footer>
-          <el-button size="large" @click="stockStateDialog = false"
-            >取 消</el-button
-          >
-          <el-button type="primary" size="large" @click="postStockStateForm"
-            >确 定</el-button
-          >
+          <el-button size="large" @click="stockStateDialog = false">取 消</el-button>
+          <el-button type="primary" size="large" @click="postStockStateForm">确 定</el-button>
         </template>
       </el-dialog>
 
       <!-- 编辑库存 -->
       <div v-if="back == true">
-        <PurchaseDetail
-          :updateId="updateId"
-          :activeName="activeName"
-          @updateSaleSuccess="updateSaleSuccess"
-        ></PurchaseDetail>
+        <PurchaseDetail :updateId="updateId" :activeName="activeName" @updateSaleSuccess="updateSaleSuccess">
+        </PurchaseDetail>
       </div>
 
       <!-- 备注弹窗 -->
@@ -791,12 +394,8 @@
           </div>
           <div style="width: 400px; text-align: center">内容</div>
         </div>
-        <div
-          class="code-table"
-          style="margin-top: 5px; width: 100%; margin-top: 10px"
-          v-for="(items, index) in noteList"
-          :key="index"
-        >
+        <div class="code-table" style="margin-top: 5px; width: 100%; margin-top: 10px" v-for="(items, index) in noteList"
+          :key="index">
           <div style="width: 150px; margin-right: 10px; text-align: center">
             <span>{{ items.time }}</span>
           </div>
@@ -1208,13 +807,7 @@ const getCountryCurrency = async () => {
   console.log("国家列表", res);
 
   let countryData = res.data;
-  let list = [];
-  for (let item of countryData) {
-    if (list.indexOf(item.enCurrency) === -1) {
-      list.push(item.enCurrency);
-    }
-  }
-  currencyList.value = list;
+  currencyList.value = [...new Set(countryData.map(v => v.enCurrency))];
 };
 getCountryCurrency();
 
